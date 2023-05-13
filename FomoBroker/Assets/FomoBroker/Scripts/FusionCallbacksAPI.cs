@@ -12,6 +12,8 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
     private NetworkRunner networkRunner;
 
+    public float NetworkDeltaTime => networkRunner.DeltaTime;
+
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
     }

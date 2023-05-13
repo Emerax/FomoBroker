@@ -249,6 +249,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
+  actionStateTime: 10
 --- !u!4 &280879181
 Transform:
   m_ObjectHideFlags: 0
@@ -1460,7 +1461,7 @@ PrefabInstance:
     - target: {fileID: 6341649487228579543, guid: 641f12246af474193a21246b9c9a3b36,
         type: 3}
       propertyPath: m_Name
-      value: Lobby_join UI
+      value: UI
       objectReference: {fileID: 0}
     - target: {fileID: 6341649487434119964, guid: 641f12246af474193a21246b9c9a3b36,
         type: 3}
