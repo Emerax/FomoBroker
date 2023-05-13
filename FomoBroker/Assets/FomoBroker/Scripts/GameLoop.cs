@@ -2,6 +2,11 @@ using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PlayerInventory {
+    public int money;
+    public int[] stocks = new int[3];
+}
+
 public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private FusionAPI fusion;
@@ -9,6 +14,8 @@ public class GameLoop : NetworkBehaviour {
     private UI ui;
     [SerializeField]
     private float actionStateTime = 60;
+    [SerializeField]
+    private float dividendStateTime = 3;
     [SerializeField]
     private PlayerInventories inventoryHandler;
     [SerializeField]
@@ -25,12 +32,19 @@ public class GameLoop : NetworkBehaviour {
     private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
     private AttractionManager attractionManager;
 
+    Dictionary<int, int> playerIDToIndex = new Dictionary<int, int>();
+    List<int> playerIndexToID = new List<int>();
+    List<int> connectedPlayerIds = new List<int>();
+
+    List<PlayerInventory> inventories;
+
     private int playerCount;
 
     private void Awake() {
         //Setup runners
         stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
+        stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
 
         attractionManager = new(temples);
 
@@ -90,6 +104,11 @@ public class GameLoop : NetworkBehaviour {
     private void OnPlayerCountChanged(int playerCount) {
         ui.PlayerCountText.text = playerCount.ToString();
         this.playerCount = playerCount;
+    }
+
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        Debug.Log("Player " + player.PlayerId + " joined");
+        connectedPlayerIds.Add(player.PlayerId);
     }
 
     private static void ChangeState(Changed<GameLoop> changed) {
@@ -185,6 +204,11 @@ public class GameLoop : NetworkBehaviour {
             case GameState.LOBBY:
                 ui.HideUI();
                 if(isHost) {
+                    foreach(int id in connectedPlayerIds) {
+                        playerIDToIndex[id] = playerIndexToID.Count;
+                        playerIndexToID.Add(id);
+                    }
+
                     int[] runnerCountForBase = RandomizeRunnerCountForBases();
 
                     /*while(totalRunnerCount > 0) {
@@ -193,10 +217,16 @@ public class GameLoop : NetworkBehaviour {
                     }*/
                     int[][] stockCountForPlayer = RandomizePlayerStocks();
 
+                    inventories = new List<PlayerInventory>();
                     uint[] packedPlayerStockCount = new uint[playerCount];
                     for(int pi = 0; pi < playerCount; ++pi) {
                         packedPlayerStockCount[pi] = packStockCountArray(stockCountForPlayer[pi]);
+                        PlayerInventory inv = new PlayerInventory();
+                        inv.money = 100;
+                        inv.stocks = stockCountForPlayer[pi];
+                        inventories.Add(inv);
                     }
+
                     InitGameRPC(runnerCountForBase, packedPlayerStockCount);
                 }
                 break;
@@ -239,6 +269,15 @@ public class GameLoop : NetworkBehaviour {
                 }
                 break;
             case GameState.DIVIDENDS:
+                if(isHost) {
+                    for(int pi = 0; pi < playerCount; ++pi) {
+                        PlayerInventory inv = inventories[pi];
+                        for(int ii = 0; ii < 3; ++ii) {
+                            inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
+                        }
+                        Debug.Log("Player" + playerIndexToID[pi] + " has " + inv.money + " money");
+                    }
+                }
                 break;
             case GameState.RENT:
                 break;

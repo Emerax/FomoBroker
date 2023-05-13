@@ -22,7 +22,7 @@ public class RunManager : MonoBehaviour {
     public Transform[] roads;
     readonly float baseRadius = 10.0f;
     readonly List<Runner> runners = new();
-    readonly int[] runnerCountAtBase = new int[3];
+    public readonly int[] runnerCountAtBase = new int[3];
 
     private bool runnersAreRunning = true;
     public bool RunnersAreRunning { get => runnersAreRunning; }
@@ -134,13 +134,15 @@ public class RunManager : MonoBehaviour {
     }
 
     public int[][] CalculateRunnerShifting(float[] attractionRatios) {
+        float min_rand = 0.5f;
+        float max_rand = 1.0f;
         List<int[]> shiftCount = new();
         for(int i = 0; i < runnerCountAtBase.Length; i++) {
             int runnerCount = runnerCountAtBase[i];
             shiftCount.Add(
                 new int[2] {
-                    Mathf.RoundToInt(runnerCount * attractionRatios[(i + 1) % BASE_COUNT]),
-                    Mathf.RoundToInt(runnerCount * attractionRatios[(i + 2) % BASE_COUNT])
+                    Mathf.RoundToInt(runnerCount * attractionRatios[(i + 1) % BASE_COUNT] * Random.Range(min_rand, max_rand)),
+                    Mathf.RoundToInt(runnerCount * attractionRatios[(i + 2) % BASE_COUNT] * Random.Range(min_rand, max_rand))
                 }
             );
         }
