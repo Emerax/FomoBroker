@@ -7,6 +7,8 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private FusionCallbacksAPI fusion;
     [SerializeField]
+    private UIVisibility ui;
+    [SerializeField]
     private TMP_InputField roomNameInput;
     [SerializeField]
     private Button joinOrHostButton;
@@ -22,7 +24,8 @@ public class GameLoop : NetworkBehaviour {
 
         //Network callbacks
         fusion.JoinGameEvent += OnJoinGame;
-        Debug.Log("Added callbacks");
+
+        ui.ShowJoinOrHost();
     }
 
 
@@ -37,6 +40,7 @@ public class GameLoop : NetworkBehaviour {
 
     private void OnJoinGame(bool isHost) {
         Debug.Log($"Joined game as {(isHost ? "host" : "client")}");
+        ui.ShowLobby();
     }
 
     private void ChangeState(GameState newState) {
