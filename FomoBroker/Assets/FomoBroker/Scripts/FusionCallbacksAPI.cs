@@ -5,31 +5,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
-    public Action JoinGameAsHostEvent;
-    public Action JoinGameAsClientEvent;
+    public Action<bool> JoinGameEvent;
 
     private NetworkRunner networkRunner;
-    private bool connected;
 
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
     }
 
     private void Update() {
-        if(!connected) {
-            return;
-        }
     }
 
     public async void JoinOrHostGame(string roomName) {
         StartGameResult res = await networkRunner.StartGame(new StartGameArgs() {
             GameMode = GameMode.AutoHostOrClient,
             SessionName = roomName,
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 
         if(res.Ok) {
-            Debug.Log($"Start was ok! Mode? {networkRunner.Mode}, game mode: {networkRunner.GameMode}");
-            connected = true;
+            JoinGameEvent.Invoke(networkRunner.IsServer);
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
@@ -38,7 +33,6 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
     public void OnConnectedToServer(NetworkRunner runner) {
         Debug.Log($"Connected, mode is {runner.Mode}");
-        connected = true;
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) {

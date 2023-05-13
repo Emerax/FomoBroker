@@ -16,17 +16,27 @@ public class GameLoop : NetworkBehaviour {
     private GameState gameState = GameState.START;
 
     private void Awake() {
+        //UI Callbacks
         joinOrHostButton.onClick.AddListener(JoinOrHostGame);
-        startButton.onClick.AddListener(StartGame);
+        //startButton.onClick.AddListener(StartGame);
+
+        //Network callbacks
+        fusion.JoinGameEvent += OnJoinGame;
+        Debug.Log("Added callbacks");
     }
+
 
     private void JoinOrHostGame() {
         Debug.Log("Join or host pressed!");
-        //fusion.JoinOrHostGame(roomNameInput.text);
+        fusion.JoinOrHostGame(roomNameInput.text);
     }
 
     private void StartGame() {
         Debug.Log("Start game pressed!");
+    }
+
+    private void OnJoinGame(bool isHost) {
+        Debug.Log($"Joined game as {(isHost ? "host" : "client")}");
     }
 
     private void ChangeState(GameState newState) {
