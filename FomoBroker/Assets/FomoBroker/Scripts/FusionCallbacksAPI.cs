@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     public Action<bool> JoinGameEvent;
@@ -22,6 +23,7 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
         StartGameResult res = await networkRunner.StartGame(new StartGameArgs() {
             GameMode = GameMode.AutoHostOrClient,
             SessionName = roomName,
+            Scene = SceneManager.GetActiveScene().buildIndex,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 

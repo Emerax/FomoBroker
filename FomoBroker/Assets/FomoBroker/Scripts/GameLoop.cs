@@ -7,13 +7,14 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private UI ui;
 
-
-    private GameState gameState = GameState.START;
+    private bool isHost = false;
+    [Networked(OnChanged = nameof(ChangeState))]
+    private GameState GameState { get; set; } = GameState.START;
 
     private void Awake() {
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
-        //startButton.onClick.AddListener(StartGame);
+        ui.StartButton.onClick.AddListener(StartGame);
 
         //Network callbacks
         fusion.JoinGameEvent += OnJoinGame;
@@ -22,6 +23,10 @@ public class GameLoop : NetworkBehaviour {
         EnterState(GameState.START);
     }
 
+    public override void Spawned() {
+        base.Spawned();
+        Debug.Log($"{name} spawned!");
+    }
 
     private void JoinOrHostGame() {
         Debug.Log("Join or host pressed!");
@@ -30,21 +35,28 @@ public class GameLoop : NetworkBehaviour {
 
     private void StartGame() {
         Debug.Log("Start game pressed!");
+        GameState = GameState.ACTION;
     }
 
     private void OnJoinGame(bool isHost) {
         Debug.Log($"Joined game as {(isHost ? "host" : "client")}");
-        ui.ShowLobby();
+        this.isHost = isHost;
+        GameState = GameState.LOBBY;
     }
 
     private void OnPlayerCountChanged(int playerCount) {
         ui.PlayerCountText.text = playerCount.ToString();
     }
 
-    private void ChangeState(GameState newState) {
-        ExitState(gameState);
-        gameState = newState;
-        EnterState(gameState);
+
+    private static void ChangeState(Changed<GameLoop> changed) {
+        changed.LoadOld();
+        GameState prevState = changed.Behaviour.GameState;
+        changed.Behaviour.ExitState(prevState);
+        changed.LoadNew();
+        GameState newState = changed.Behaviour.GameState;
+        changed.Behaviour.EnterState(newState);
+        Debug.Log($"Changing state from {prevState} to {newState}");
     }
 
     private void ExitState(GameState previousState) {
@@ -52,6 +64,7 @@ public class GameLoop : NetworkBehaviour {
             case GameState.START:
                 break;
             case GameState.LOBBY:
+                ui.HideUI();
                 break;
             case GameState.ACTION:
                 break;
@@ -76,6 +89,8 @@ public class GameLoop : NetworkBehaviour {
                 ui.ShowJoinOrHost();
                 break;
             case GameState.LOBBY:
+                ui.ShowLobby();
+                ui.StartButton.gameObject.SetActive(isHost);
                 break;
             case GameState.ACTION:
                 break;
