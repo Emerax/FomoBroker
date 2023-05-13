@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class GameLoop : NetworkBehaviour {
     [SerializeField]
-    private FusionCallbacksAPI fusion;
+    private FusionAPI fusion;
     [SerializeField]
     private UI ui;
     [SerializeField]
     private float actionStateTime = 60;
+    [SerializeField]
+    private PlayerInventories inventoryHandler;
     [SerializeField]
     private RunManager runManager;
     [SerializeField]

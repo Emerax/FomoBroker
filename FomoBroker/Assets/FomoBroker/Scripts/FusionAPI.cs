@@ -6,13 +6,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
+public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
     public Action<bool> JoinGameEvent;
     public Action<int> PlayerCountChangedEvent;
 
     private NetworkRunner networkRunner;
+    private int playerID;
 
     public float NetworkDeltaTime => networkRunner.DeltaTime;
+    public int PlayerID => playerID;
 
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
@@ -31,7 +33,9 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
         if(res.Ok) {
             JoinGameEvent.Invoke(networkRunner.IsServer);
-            PlayerCountChangedEvent.Invoke(networkRunner.ActivePlayers.Count());
+            int playerCount = networkRunner.ActivePlayers.Count();
+            PlayerCountChangedEvent.Invoke(playerCount);
+            playerID = playerCount - 1;
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
