@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,6 +44,6 @@ public class UI : MonoBehaviour {
 
     public void UpdateTimer(float time) {
         TimerText.gameObject.SetActive(time >= 0);
-        TimerText.text = time.ToString();
+        TimerText.text = TimeSpan.FromSeconds(time).ToString("mm':'ss");
     }
 }

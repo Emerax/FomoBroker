@@ -1,6 +1,3 @@
-
-using UnityEngine;
-
 public class ActionStateRunner : IGameStateRunner {
     private readonly float stateTime;
 
@@ -17,7 +14,6 @@ public class ActionStateRunner : IGameStateRunner {
 
     public float Run(float elapsed) {
         remainingTime -= elapsed;
-        Debug.Log($"Remaining time now {remainingTime}");
         return remainingTime;
     }
 

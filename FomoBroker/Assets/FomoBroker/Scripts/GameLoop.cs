@@ -9,6 +9,10 @@ public class GameLoop : NetworkBehaviour {
     private UI ui;
     [SerializeField]
     private float actionStateTime = 60;
+    [SerializeField]
+    private RunManager runManager;
+    [SerializeField]
+    private List<Temple> temples;
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
@@ -17,10 +21,14 @@ public class GameLoop : NetworkBehaviour {
 
     private bool isHost = false;
     private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
+    private AttractionManager attractionManager;
 
     private void Awake() {
         //Setup runners
         stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
+        stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
+
+        attractionManager = new(temples);
 
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
@@ -115,6 +123,7 @@ public class GameLoop : NetworkBehaviour {
             case GameState.ACTION:
                 break;
             case GameState.MIGRATION:
+                runManager.MigrateRunners(attractionManager.GetAttractionRatios());
                 break;
             case GameState.DIVIDENDS:
                 break;

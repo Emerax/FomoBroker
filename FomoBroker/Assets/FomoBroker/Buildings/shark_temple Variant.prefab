@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.8
+      value: 28.681726
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
@@ -25,27 +25,27 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -74.4
+      value: -75.67469
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9872164
+      value: 0.9927573
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.1593857
+      value: -0.12013691
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
@@ -55,7 +55,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -18.342
+      value: -13.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
@@ -65,7 +65,25 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 74c1c3792f33511479f8820fd6bee4a0,
         type: 3}
       propertyPath: m_Name
-      value: shark_temple
+      value: shark_temple Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74c1c3792f33511479f8820fd6bee4a0, type: 3}
+--- !u!1 &5691408873240802615 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 74c1c3792f33511479f8820fd6bee4a0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4772298170066208870}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &981416634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5691408873240802615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
