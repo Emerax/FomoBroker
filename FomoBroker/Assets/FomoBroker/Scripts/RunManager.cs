@@ -29,16 +29,17 @@ public class RunManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        SpawnDudes(new int[] { 30, 50, 10 });
+        //SpawnDudes(new int[] { 30, 50, 10 });
     }
 
-    void SpawnDudes(int[] numForBase) {
+    public void SpawnDudes(int[] numForBase) {
         if(numForBase.Length != bases.Length) {
             Debug.LogError("numForBase length must match bases length");
             return;
         }
         for(int baseIndex = 0; baseIndex < numForBase.Length; baseIndex++) {
             runnerCountAtBase[baseIndex] = numForBase[baseIndex];
+            Debug.Log("Spawn " + numForBase[baseIndex] + " runners at base " + baseIndex);
             Vector3 basePos = bases[baseIndex].position;
             for(int ii = 0; ii < numForBase[baseIndex]; ++ii) {
                 GameObject go = GameObject.Instantiate(dudePrefab);
@@ -63,7 +64,7 @@ public class RunManager : MonoBehaviour {
     const int BASE_COUNT = 3;
 
 
-    void Run(int[][] shiftCount) {
+    public void Run(int[][] shiftCount) {
         if(RunnersAreRunning) return;
 
         List<Runner>[] runnersAtBase = new List<Runner>[BASE_COUNT];
@@ -79,6 +80,9 @@ public class RunManager : MonoBehaviour {
             for(int si = 0; si < BASE_COUNT - 1; ++si) {
                 int targetBaseIndex = (bi + si + 1) % BASE_COUNT;
                 int roadIndex = ((bi + 1) % bases.Length == targetBaseIndex) ? bi : (bi + 2) % bases.Length;
+                runnerCountAtBase[bi]              -= shiftCount[bi][si];
+                runnerCountAtBase[targetBaseIndex] += shiftCount[bi][si];
+
                 for(int ii = 0; ii < shiftCount[bi][si]; ++ii) {
                     int runnerIndex = Random.Range(0, runnersAtBase[bi].Count);
                     Runner runner = runnersAtBase[bi][runnerIndex];
@@ -129,7 +133,7 @@ public class RunManager : MonoBehaviour {
         }*/
     }
 
-    public void MigrateRunners(float[] attractionRatios) {
+    public int[][] CalculateRunnerShifting(float[] attractionRatios) {
         List<int[]> shiftCount = new();
         for(int i = 0; i < runnerCountAtBase.Length; i++) {
             int runnerCount = runnerCountAtBase[i];
@@ -154,41 +158,46 @@ public class RunManager : MonoBehaviour {
         //        runnerCountAtBase[(ii + jj + 1) % BASE_COUNT] += shiftCount[ii][jj];
         //    }
         //}
-        Run(shiftCount.ToArray());
+        return shiftCount.ToArray();
     }
 
     // Update is called once per frame
     void Update() {
-        int remainingRunners = 0;
-        for(int ri = 0; ri < runners.Count; ++ri) {
-            Runner runner = runners[ri];
-            if(runner.isRunning) {
-                remainingRunners++;
-                Vector3 dp = runner.targetPosition - runner.transform.position;
-                float dist = dp.magnitude;
-                Vector3 dir = dp / dist;
-                float targetRotation = Mathf.Atan2(dir.x, dir.z);
-                float rotation = Mathf.MoveTowardsAngle(runner.transform.eulerAngles.y, targetRotation * Mathf.Rad2Deg, Time.deltaTime * 360.0f * 2.0f);
-                runner.transform.eulerAngles = new Vector3(0, rotation, 0);
-                float moveAmount = runner.runSpeed * Time.deltaTime;
-                if(dist <= moveAmount) {
-                    runner.waypointIndex++;
-                    if(runner.waypointIndex < runner.waypoints.Count) {
-                        runner.targetPosition = runner.waypoints[runner.waypointIndex];
+        if(runnersAreRunning) {
+            int remainingRunners = 0;
+            for(int ri = 0; ri < runners.Count; ++ri) {
+                Runner runner = runners[ri];
+                if(runner.isRunning) {
+                    remainingRunners++;
+                    Vector3 dp = runner.targetPosition - runner.transform.position;
+                    float dist = dp.magnitude;
+                    Vector3 dir = dp / dist;
+                    float targetRotation = Mathf.Atan2(dir.x, dir.z);
+                    float rotation = Mathf.MoveTowardsAngle(runner.transform.eulerAngles.y, targetRotation * Mathf.Rad2Deg, Time.deltaTime * 360.0f * 2.0f);
+                    runner.transform.eulerAngles = new Vector3(0, rotation, 0);
+                    float moveAmount = runner.runSpeed * Time.deltaTime;
+                    if(dist <= moveAmount) {
+                        runner.waypointIndex++;
+                        if(runner.waypointIndex < runner.waypoints.Count) {
+                            runner.targetPosition = runner.waypoints[runner.waypointIndex];
+                        }
+                        else {
+                            runner.isRunning = false;
+                            runner.transform.position = runner.targetPosition;
+                            runner.anim.CrossFade("Armature|idle");
+
+                            Debug.Assert(Vector3.Distance(runner.transform.position, bases[runner.baseIndex].position) < 15.0f);
+                        }
                     }
                     else {
-                        runner.isRunning = false;
-                        runner.transform.position = runner.targetPosition;
-                        runner.anim.CrossFade("Armature|idle");
-
-                        Debug.Assert(Vector3.Distance(runner.transform.position, bases[runner.baseIndex].position) < 15.0f);
+                        runner.transform.position = runner.transform.position + dir * moveAmount;
                     }
                 }
-                else {
-                    runner.transform.position = runner.transform.position + dir * moveAmount;
-                }
+            }
+            if(remainingRunners == 0) {
+                Debug.Log("Runners at bases: " + runnerCountAtBase[0] + ", " + runnerCountAtBase[1] + ", " + runnerCountAtBase[2]);
+                runnersAreRunning = false;
             }
         }
-        if(remainingRunners == 0) runnersAreRunning = false;
     }
 }
