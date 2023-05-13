@@ -28,8 +28,13 @@ public class UI : MonoBehaviour {
         LobbyRoot.SetActive(false);
     }
 
-    internal void ShowLobby() {
+    public void ShowLobby() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(true);
+    }
+
+    public void HideUI() {
+        JoinOrHostRoot.SetActive(false);
+        LobbyRoot.SetActive(false);
     }
 }
