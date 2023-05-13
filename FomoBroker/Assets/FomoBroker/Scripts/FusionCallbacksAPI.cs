@@ -99,8 +99,8 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    private void SayHelloRPC() {
-        if(networkRunner.IsServer) {
+    private void SayHelloRPC(RpcInfo info = default) {
+        if(info.Source == networkRunner.LocalPlayer) {
             Debug.Log("You say hi!");
         }
         else {
