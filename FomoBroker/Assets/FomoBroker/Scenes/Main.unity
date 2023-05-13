@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571337, b: 0.3069219, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -352,6 +352,7 @@ MonoBehaviour:
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   actionStateTime: 3
+  dividendStateTime: 3
   inventoryHandler: {fileID: 280879182}
   runManager: {fileID: 1631081915}
   temples:
@@ -371,7 +372,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 20
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &280879182
 MonoBehaviour:
@@ -1701,7 +1702,19 @@ MonoBehaviour:
       m_Calls: []
   PlayerJoined:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 280879180}
+        m_TargetAssemblyTypeName: GameLoop, Assembly-CSharp
+        m_MethodName: OnPlayerJoined
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   PlayerLeft:
     m_PersistentCalls:
       m_Calls: []
@@ -2533,7 +2546,7 @@ PrefabInstance:
     - target: {fileID: 6341649487228579543, guid: 641f12246af474193a21246b9c9a3b36,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6341649487434119964, guid: 641f12246af474193a21246b9c9a3b36,
         type: 3}
