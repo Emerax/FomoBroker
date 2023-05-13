@@ -23,7 +23,6 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
         }
 
         if(Input.anyKeyDown) {
-            Debug.Log($"You say 'Hello!'");
             SayHelloRPC();
         }
     }
@@ -40,7 +39,8 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
         });
 
         if(res.Ok) {
-            Debug.Log("Start was ok!");
+            Debug.Log($"Start was ok! Server? {networkRunner.IsServer} Client? {networkRunner.IsClient}");
+            connected = true;
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
@@ -100,6 +100,11 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     private void SayHelloRPC() {
-        Debug.Log($"Other player says hello!");
+        if(networkRunner.IsServer) {
+            Debug.Log("You say hi!");
+        }
+        else {
+            Debug.Log($"Other player says hello!");
+        }
     }
 }
