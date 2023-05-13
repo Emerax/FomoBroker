@@ -1,4 +1,5 @@
 using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameLoop : NetworkBehaviour {
@@ -6,12 +7,21 @@ public class GameLoop : NetworkBehaviour {
     private FusionCallbacksAPI fusion;
     [SerializeField]
     private UI ui;
+    [SerializeField]
+    private float actionStateTime = 60;
 
-    private bool isHost = false;
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
+    [Networked]
+    private float RemainingStateTime { get; set; }
+
+    private bool isHost = false;
+    private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
 
     private void Awake() {
+        //Setup runners
+        stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
+
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
         ui.StartButton.onClick.AddListener(StartGame);
@@ -23,9 +33,17 @@ public class GameLoop : NetworkBehaviour {
         EnterState(GameState.START);
     }
 
-    public override void Spawned() {
-        base.Spawned();
-        Debug.Log($"{name} spawned!");
+    public override void FixedUpdateNetwork() {
+        if(isHost) {
+            if(stateRunners.TryGetValue(GameState, out IGameStateRunner runner)) {
+                RemainingStateTime = runner.Run(fusion.NetworkDeltaTime);
+                if(runner.IsStateOver(out GameState nextState)) {
+                    GameState = nextState;
+                }
+            }
+        }
+
+        ui.UpdateTimer(RemainingStateTime);
     }
 
     private void JoinOrHostGame() {
@@ -39,7 +57,6 @@ public class GameLoop : NetworkBehaviour {
     }
 
     private void OnJoinGame(bool isHost) {
-        Debug.Log($"Joined game as {(isHost ? "host" : "client")}");
         this.isHost = isHost;
         GameState = GameState.LOBBY;
     }
@@ -47,7 +64,6 @@ public class GameLoop : NetworkBehaviour {
     private void OnPlayerCountChanged(int playerCount) {
         ui.PlayerCountText.text = playerCount.ToString();
     }
-
 
     private static void ChangeState(Changed<GameLoop> changed) {
         changed.LoadOld();
@@ -80,6 +96,10 @@ public class GameLoop : NetworkBehaviour {
                 break;
             case GameState.GAME_OVER:
                 break;
+        }
+
+        if(isHost && stateRunners.TryGetValue(previousState, out IGameStateRunner runner)) {
+            runner.Reset();
         }
     }
 
