@@ -2,45 +2,32 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
+    public Action<bool> JoinGameEvent;
+    public Action<int> PlayerCountChangedEvent;
+
     private NetworkRunner networkRunner;
-    private bool connected;
 
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
     }
 
-    private void Start() {
-        StartGame(GameMode.AutoHostOrClient);
-    }
-
     private void Update() {
-        if(!connected) {
-            return;
-        }
-
-        if(Input.anyKeyDown) {
-            SayHelloRPC();
-        }
     }
 
-    public async void StartGame(GameMode mode) {
-        Debug.Log("Starting game");
-
-        // Start or join (depends on gamemode) a session with a specific name
+    public async void JoinOrHostGame(string roomName) {
         StartGameResult res = await networkRunner.StartGame(new StartGameArgs() {
-            GameMode = mode,
-            SessionName = "TestRoom",
-            Scene = SceneManager.GetActiveScene().buildIndex,
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+            GameMode = GameMode.AutoHostOrClient,
+            SessionName = roomName,
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
 
         if(res.Ok) {
-            Debug.Log($"Start was ok! Server? {networkRunner.IsServer} Client? {networkRunner.IsClient}");
-            connected = true;
+            JoinGameEvent.Invoke(networkRunner.IsServer);
+            PlayerCountChangedEvent.Invoke(networkRunner.ActivePlayers.Count());
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
@@ -48,8 +35,7 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnConnectedToServer(NetworkRunner runner) {
-        Debug.Log("Connected");
-        connected = true;
+        Debug.Log($"Connected, mode is {runner.Mode}");
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason) {
@@ -75,9 +61,11 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        PlayerCountChangedEvent.Invoke(runner.ActivePlayers.Count());
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
+        PlayerCountChangedEvent.Invoke(runner.ActivePlayers.Count());
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) {
@@ -96,15 +84,5 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) {
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void SayHelloRPC(RpcInfo info = default) {
-        if(info.Source == networkRunner.LocalPlayer) {
-            Debug.Log("You say hi!");
-        }
-        else {
-            Debug.Log($"Other player says hello!");
-        }
     }
 }

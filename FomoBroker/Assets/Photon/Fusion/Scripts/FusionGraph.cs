@@ -114,22 +114,22 @@ public class FusionGraph : FusionGraphBase {
   bool _showUITargets;
 
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Image GraphImg;
+  public UnityEngine.UI.Image GraphImg;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Text LabelMin;
+  public UnityEngine.UI.Text LabelMin;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Text LabelMax;
+  public UnityEngine.UI.Text LabelMax;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Text LabelAvg;
+  public UnityEngine.UI.Text LabelAvg;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Text LabelLast;
+  public UnityEngine.UI.Text LabelLast;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Text LabelPer;
+  public UnityEngine.UI.Text LabelPer;
 
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Dropdown _viewDropdown;
+  public UnityEngine.UI.Dropdown _viewDropdown;
   [DrawIf(nameof(_showUITargets), Hide = true)]
-  public UI.Button _avgBttn;
+  public UnityEngine.UI.Button _avgBttn;
 
   float _min;
   float _max;
@@ -171,7 +171,7 @@ public class FusionGraph : FusionGraphBase {
       for (int i = 0; i < 16; ++i) {
         if (((int)flags & (1 << i)) != 0) {
           DropdownLookup.Add(1 << i);
-          _viewDropdown.options.Add(new UI.Dropdown.OptionData(FusionStatsUtilities.CachedTelemetryNames[i + 1]));
+                    _viewDropdown.options.Add(new UnityEngine.UI.Dropdown.OptionData(FusionStatsUtilities.CachedTelemetryNames[i + 1]));
           if ((1 << i & (int)_statsBuffer.DefaultVisualization) != 0) {
             _viewDropdown.value = i - 1;
           }
@@ -701,7 +701,7 @@ public class FusionGraph : FusionGraphBase {
     var background = root.CreateRectTransform("Background")
       .ExpandAnchor();
 
-    BackImage = background.gameObject.AddComponent<UI.Image>();
+        BackImage = background.gameObject.AddComponent<UnityEngine.UI.Image>();
     BackImage.color = BackColor;
     BackImage.raycastTarget = false;
 
@@ -709,7 +709,7 @@ public class FusionGraph : FusionGraphBase {
       .SetAnchors(0.0f, 1.0f, 0.2f, 0.8f)
       .SetOffsets(0.0f, 0.0f, 0.0f, 0.0f);
 
-    GraphImg = graphRT.gameObject.AddComponent<UI.Image>();
+        GraphImg = graphRT.gameObject.AddComponent<UnityEngine.UI.Image>();
     GraphImg.raycastTarget = false;
     ResetGraphShader();
 
@@ -743,7 +743,7 @@ public class FusionGraph : FusionGraphBase {
     avgRT.anchoredPosition = new Vector2(0, 0);
     LabelAvg = avgRT.AddText("-", TextAnchor.LowerCenter, fontColor);
     LabelAvg.raycastTarget = true;
-    _avgBttn = avgRT.gameObject.AddComponent<UI.Button>();
+        _avgBttn = avgRT.gameObject.AddComponent<UnityEngine.UI.Button>();
 
     // Main Center value
     var perRT = root.CreateRectTransform("Per")

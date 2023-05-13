@@ -8,12 +8,12 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
   protected const int PAD = FusionStatsUtilities.PAD;
   protected const int MARGIN = FusionStatsUtilities.MARGIN;
 
-  [SerializeField] [HideInInspector] UI.Text _inputValueText;
-  [SerializeField] [HideInInspector] UI.Text _stateValueText;
-  [SerializeField] [HideInInspector] UI.Text _objectIdLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _inputValueText;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _stateValueText;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _objectIdLabel;
 
-  [SerializeField] [HideInInspector] UI.Image _stateAuthBackImage;
-  [SerializeField] [HideInInspector] UI.Image _inputAuthBackImage;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Image _stateAuthBackImage;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Image _inputAuthBackImage;
 
   FusionStats _fusionStats;
 
@@ -90,7 +90,7 @@ public class FusionStatsObjectIds : Fusion.Behaviour, IFusionStatsView {
     }
   }
 
-  RectTransform AddAuthorityPanel(RectTransform parent, string label, ref UI.Text valueText, ref UI.Image backImage) {
+  RectTransform AddAuthorityPanel(RectTransform parent, string label, ref UnityEngine.UI.Text valueText, ref UnityEngine.UI.Image backImage) {
     var fontColor = _fusionStats.FontColor;
 
     var authIdPanelRT = parent.CreateRectTransform($"{label} Id Panel", true)
