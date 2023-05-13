@@ -2,10 +2,12 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     public Action<bool> JoinGameEvent;
+    public Action<int> PlayerCountChangedEvent;
 
     private NetworkRunner networkRunner;
 
@@ -25,6 +27,7 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
         if(res.Ok) {
             JoinGameEvent.Invoke(networkRunner.IsServer);
+            PlayerCountChangedEvent.Invoke(networkRunner.ActivePlayers.Count());
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
@@ -58,9 +61,11 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
+        PlayerCountChangedEvent.Invoke(runner.ActivePlayers.Count());
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player) {
+        PlayerCountChangedEvent.Invoke(runner.ActivePlayers.Count());
     }
 
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) {

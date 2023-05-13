@@ -19,8 +19,8 @@ public abstract class FusionGraphBase : Fusion.Behaviour, IFusionStatsView {
   protected const int MRGN = FusionStatsUtilities.MARGIN;
   protected const int MAX_FONT_SIZE_WITH_GRAPH = 24;
 
-  [SerializeField] [HideInInspector] protected UI.Text  LabelTitle;
-  [SerializeField] [HideInInspector] protected UI.Image BackImage;
+  [SerializeField] [HideInInspector] protected UnityEngine.UI.Text  LabelTitle;
+  [SerializeField] [HideInInspector] protected UnityEngine.UI.Image BackImage;
 
   /// <summary>
   /// Which section of the Fusion engine is being monitored. In combination with StatId, this selects the stat being monitored.

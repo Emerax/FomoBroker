@@ -673,22 +673,22 @@ public class FusionStats : Fusion.Behaviour {
   [NonSerialized] List<IFusionStatsView> _foundViews;
   [NonSerialized] List<FusionGraph> _foundGraphs;
 
-  [SerializeField] [HideInInspector] UI.Text _titleText;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _titleText;
 
-  [SerializeField] [HideInInspector] UI.Text _clearIcon;
-  [SerializeField] [HideInInspector] UI.Text _pauseIcon;
-  [SerializeField] [HideInInspector] UI.Text _togglIcon;
-  [SerializeField] [HideInInspector] UI.Text _closeIcon;
-  [SerializeField] [HideInInspector] UI.Text _canvsIcon;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _clearIcon;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _pauseIcon;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _togglIcon;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _closeIcon;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _canvsIcon;
 
-  [SerializeField] [HideInInspector] UI.Text _clearLabel;
-  [SerializeField] [HideInInspector] UI.Text _pauseLabel;
-  [SerializeField] [HideInInspector] UI.Text _togglLabel;
-  [SerializeField] [HideInInspector] UI.Text _closeLabel;
-  [SerializeField] [HideInInspector] UI.Text _canvsLabel;
-  [SerializeField] [HideInInspector] UI.Text _objectNameText;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _clearLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _pauseLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _togglLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _closeLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _canvsLabel;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Text _objectNameText;
 
-  [SerializeField] [HideInInspector] UI.GridLayoutGroup _graphGridLayoutGroup;
+  [SerializeField] [HideInInspector] UnityEngine.UI.GridLayoutGroup _graphGridLayoutGroup;
 
   [SerializeField] [HideInInspector] Canvas _canvas;
   [SerializeField] [HideInInspector] RectTransform _canvasRT;
@@ -705,13 +705,13 @@ public class FusionStats : Fusion.Behaviour {
   [SerializeField] [HideInInspector] RectTransform _clientIdPanelRT;
   [SerializeField] [HideInInspector] RectTransform _authorityPanelRT;
 
-  [SerializeField] [HideInInspector] UI.Button _titleButton;
-  [SerializeField] [HideInInspector] UI.Button _objctButton;
-  [SerializeField] [HideInInspector] UI.Button _clearButton;
-  [SerializeField] [HideInInspector] UI.Button _togglButton;
-  [SerializeField] [HideInInspector] UI.Button _pauseButton;
-  [SerializeField] [HideInInspector] UI.Button _closeButton;
-  [SerializeField] [HideInInspector] UI.Button _canvsButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _titleButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _objctButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _clearButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _togglButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _pauseButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _closeButton;
+  [SerializeField] [HideInInspector] UnityEngine.UI.Button _canvsButton;
 
   public Rect CurrentRect => _canvasType == StatCanvasTypes.GameObject ? _gameObjectRect : _overlayRect;
 
@@ -993,12 +993,12 @@ public class FusionStats : Fusion.Behaviour {
     if (Runner && Runner.IsRunning) {
       RunnerVisibilityNode.AddVisibilityNodes(_canvasRT.gameObject, Runner);
     }
-    var scaler = _canvasRT.gameObject.AddComponent<UI.CanvasScaler>();
-    scaler.uiScaleMode = UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+    var scaler = _canvasRT.gameObject.AddComponent<UnityEngine.UI.CanvasScaler>();
+    scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
     scaler.referenceResolution = new Vector2(SCREEN_SCALE_W, SCREEN_SCALE_H);
     scaler.matchWidthOrHeight = .4f;
 
-    _canvasRT.gameObject.AddComponent<UI.GraphicRaycaster>();
+        _canvasRT.gameObject.AddComponent<UnityEngine.UI.GraphicRaycaster>();
 
 #if UNITY_EDITOR
     _guidesRT = _canvasRT.MakeGuides();
@@ -1016,7 +1016,7 @@ public class FusionStats : Fusion.Behaviour {
       .SetAnchors(0.0f, 1.0f, 0.75f, 1.0f)
       .SetOffsets(MARGIN, -MARGIN, 0.0f, -MARGIN);
 
-    _titleButton = _titleRT.gameObject.AddComponent<UI.Button>();
+        _titleButton = _titleRT.gameObject.AddComponent<UnityEngine.UI.Button>();
     _titleText   = _titleRT.AddText(_runner ? _runner.name : "Disconnected", TextAnchor.UpperCenter, _fontColor);
     _titleText.raycastTarget = true;
 
@@ -1026,7 +1026,7 @@ public class FusionStats : Fusion.Behaviour {
       .SetAnchors(0.0f, 1.0f, 0.0f, 0.75f)
       .SetOffsets(MARGIN, -MARGIN, MARGIN, 0);
 
-    var buttonsGrid = _buttonsRT.gameObject.AddComponent<UI.HorizontalLayoutGroup>();
+    var buttonsGrid = _buttonsRT.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
     buttonsGrid.childControlHeight = true;
     buttonsGrid.childControlWidth = true;
     buttonsGrid.spacing = MARGIN;
@@ -1052,7 +1052,7 @@ public class FusionStats : Fusion.Behaviour {
       .ExpandTopAnchor(MARGIN)
       .AddCircleSprite(_objDataBackColor);
 
-    _objctButton = _objectTitlePanelRT.gameObject.AddComponent<UI.Button>();
+        _objctButton = _objectTitlePanelRT.gameObject.AddComponent<UnityEngine.UI.Button>();
 
     var objectTitleRT = _objectTitlePanelRT
       .CreateRectTransform("Object Name")
@@ -1574,7 +1574,7 @@ public class FusionStats : Fusion.Behaviour {
         graphColCount = _foundGraphs.Count;
       }
 
-      _graphGridLayoutGroup.constraint = UI.GridLayoutGroup.Constraint.FixedColumnCount;
+            _graphGridLayoutGroup.constraint = UnityEngine.UI.GridLayoutGroup.Constraint.FixedColumnCount;
       _graphGridLayoutGroup.constraintCount = graphColCount;
 
       var cellwidth = _graphsLayoutRT.rect.width / graphColCount - MARGIN;

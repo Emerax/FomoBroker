@@ -184,12 +184,12 @@ namespace Fusion.StatsInternal {
       return rt;
     }
 
-    public static UI.Dropdown CreateDropdown(this RectTransform rt, float padding, Color fontColor) {
+    public static UnityEngine.UI.Dropdown CreateDropdown(this RectTransform rt, float padding, Color fontColor) {
       var dropRT = rt.CreateRectTransform("Dropdown")
         .ExpandAnchor(-MARGIN);
 
-      var dropimg = dropRT.gameObject.AddComponent<UI.Image>();
-      var dropdown = dropRT.gameObject.AddComponent<UI.Dropdown>();
+      var dropimg = dropRT.gameObject.AddComponent<UnityEngine.UI.Image>();
+      var dropdown = dropRT.gameObject.AddComponent<UnityEngine.UI.Dropdown>();
       dropimg.color = new Color(0, 0, 0, 0);
       dropdown.image = dropimg;
       
@@ -206,8 +206,8 @@ namespace Fusion.StatsInternal {
         .SetPivot(0.5f, 1)
         .SetSizeDelta(0, 50);
       
-      var toggle = itemRT.gameObject.AddComponent<UI.Toggle>();
-      toggle.colors = new UI.ColorBlock() {
+      var toggle = itemRT.gameObject.AddComponent<UnityEngine.UI.Toggle>();
+      toggle.colors = new UnityEngine.UI.ColorBlock() {
         colorMultiplier = 1,
         normalColor = new Color(0.2f, 0.2f, 0.2f, 1f),
         highlightedColor = new Color(.3f, .3f, .3f, 1f),
@@ -215,13 +215,13 @@ namespace Fusion.StatsInternal {
         selectedColor = new Color(.25f, .25f, .25f, 1f),
       };
       var itemBackRT = itemRT.CreateRectTransform("Item Background", true);
-      var itemBack = itemBackRT.gameObject.AddComponent<UI.Image>();
+      var itemBack = itemBackRT.gameObject.AddComponent<UnityEngine.UI.Image>();
 
       var itemChckRT = itemRT.CreateRectTransform("Item Checkmark", true)
         .SetAnchors(0.05f, 0.1f, 0.1f, 0.9f)
         .SetOffsets(0, 0, 0, 0);
 
-      var check = itemChckRT.gameObject.AddComponent<UI.Image>();
+      var check = itemChckRT.gameObject.AddComponent<UnityEngine.UI.Image>();
       check.sprite = CircleSprite;
       check.preserveAspect = true;
 
@@ -246,8 +246,8 @@ namespace Fusion.StatsInternal {
     }
 
 
-    public static UI.Text AddText(this RectTransform rt, string label, TextAnchor anchor, Color FontColor) {
-      var text = rt.gameObject.AddComponent<UI.Text>();
+    public static UnityEngine.UI.Text AddText(this RectTransform rt, string label, TextAnchor anchor, Color FontColor) {
+      var text = rt.gameObject.AddComponent<UnityEngine.UI.Text>();
       text.text = label;
       text.color = FontColor;
       text.font = Font;
@@ -265,9 +265,9 @@ namespace Fusion.StatsInternal {
     private const int   BTTN_FONT_SIZE_MAX = 100;
     private const float BTTN_ALPHA         = 0.925f;
 
-    internal static void MakeButton(this RectTransform parent, ref UI.Button button, string iconText, string labelText, out UI.Text icon, out UI.Text text, UnityAction action) {
+    internal static void MakeButton(this RectTransform parent, ref UnityEngine.UI.Button button, string iconText, string labelText, out UnityEngine.UI.Text icon, out UnityEngine.UI.Text text, UnityAction action) {
       var rt = parent.CreateRectTransform(labelText);
-      button = rt.gameObject.AddComponent<UI.Button>();
+      button = rt.gameObject.AddComponent<UnityEngine.UI.Button>();
 
       var iconRt = rt.CreateRectTransform("Icon", true);
       iconRt.anchorMin = new Vector2(0, BTTN_LBL_NORM_HGHT);
@@ -275,7 +275,7 @@ namespace Fusion.StatsInternal {
       iconRt.offsetMin = new Vector2(0, 0);
       iconRt.offsetMax = new Vector2(0, 0);
 
-      icon = iconRt.gameObject.AddComponent<UI.Text>();
+      icon = iconRt.gameObject.AddComponent<UnityEngine.UI.Text>();
       button.targetGraphic = icon;
       icon.font = FusionStatsUtilities.Font;
       icon.text = iconText;
@@ -294,7 +294,7 @@ namespace Fusion.StatsInternal {
       textRt.offsetMin = new Vector2(0, 0);
       textRt.offsetMax = new Vector2(0, 0);
 
-      text = textRt.gameObject.AddComponent<UI.Text>();
+      text = textRt.gameObject.AddComponent<UnityEngine.UI.Text>();
       text.color = Color.black;
       text.font = FusionStatsUtilities.Font;
       text.text = labelText;
@@ -306,7 +306,7 @@ namespace Fusion.StatsInternal {
       text.resizeTextForBestFit = true;
       text.horizontalOverflow = HorizontalWrapMode.Overflow;
 
-      UI.ColorBlock colors = button.colors;
+            UnityEngine.UI.ColorBlock colors = button.colors;
       colors.normalColor = new Color(.0f, .0f, .0f, BTTN_ALPHA);
       colors.pressedColor = new Color(.5f, .5f, .5f, BTTN_ALPHA);
       colors.highlightedColor = new Color(.3f, .3f, .3f, BTTN_ALPHA);
@@ -317,7 +317,7 @@ namespace Fusion.StatsInternal {
     }
 
     public static RectTransform AddHorizontalLayoutGroup(this RectTransform rt, float spacing, int? rgtPad = null, int? lftPad = null, int? topPad = null, int? botPad = null) {
-      var group = rt.gameObject.AddComponent<UI.HorizontalLayoutGroup>();
+      var group = rt.gameObject.AddComponent<UnityEngine.UI.HorizontalLayoutGroup>();
       group.childControlHeight = true;
       group.childControlWidth  = true;
       group.spacing = spacing;
@@ -331,7 +331,7 @@ namespace Fusion.StatsInternal {
     }
 
     public static RectTransform AddVerticalLayoutGroup(this RectTransform rt, float spacing, int? rgtPad = null, int? lftPad = null, int? topPad = null, int? botPad = null) {
-      var group = rt.gameObject.AddComponent<UI.VerticalLayoutGroup>();
+      var group = rt.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
       group.childControlHeight = true;
       group.childControlWidth = true;
       group.spacing = spacing;
@@ -344,8 +344,8 @@ namespace Fusion.StatsInternal {
       return rt;
     }
 
-    public static UI.GridLayoutGroup AddGridlLayoutGroup(this RectTransform rt, float spacing, int? rgtPad = null, int? lftPad = null, int? topPad = null, int? botPad = null) {
-      var group = rt.gameObject.AddComponent<UI.GridLayoutGroup>();
+    public static UnityEngine.UI.GridLayoutGroup AddGridlLayoutGroup(this RectTransform rt, float spacing, int? rgtPad = null, int? lftPad = null, int? topPad = null, int? botPad = null) {
+      var group = rt.gameObject.AddComponent<UnityEngine.UI.GridLayoutGroup>();
       group.spacing = new Vector2( spacing, spacing);
       //group.padding = new RectOffset(
       //  rgtPad.HasValue ? rgtPad.Value : 0,
@@ -357,7 +357,7 @@ namespace Fusion.StatsInternal {
     }
 
     public static RectTransform AddImage(this RectTransform rt, Color color) {
-      var image = rt.gameObject.AddComponent<UI.Image>();
+      var image = rt.gameObject.AddComponent<UnityEngine.UI.Image>();
       image.color = color;
       image.raycastTarget = false;
       return rt;
@@ -368,10 +368,10 @@ namespace Fusion.StatsInternal {
       return rt;
     }
 
-    public static RectTransform AddCircleSprite(this RectTransform rt, Color color, out UI.Image image) {
-      image = rt.gameObject.AddComponent<UI.Image>();
+    public static RectTransform AddCircleSprite(this RectTransform rt, Color color, out UnityEngine.UI.Image image) {
+      image = rt.gameObject.AddComponent<UnityEngine.UI.Image>();
       image.sprite = CircleSprite;
-      image.type = UI.Image.Type.Sliced;
+      image.type = UnityEngine.UI.Image.Type.Sliced;
       image.pixelsPerUnitMultiplier = 100f;
       image.color = color;
       image.raycastTarget = false;
@@ -447,27 +447,27 @@ namespace Fusion.StatsInternal {
       rect.SetSiblingIndex(0);
 
       var back = rect.CreateRectTransform("Back", true);
-      back.gameObject.AddComponent<UI.Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.25f);
+      back.gameObject.AddComponent<UnityEngine.UI.Image>().color = new Color(0.5f, 0.5f, 0.5f, 0.25f);
 
       var left = rect.CreateRectTransform("Left", true);
       left.anchorMin = new Vector2(-GUIDE_MARGIN, 0);
       left.anchorMax = new Vector2(0, 1);
-      left.gameObject.AddComponent<UI.Image>().color = outlineColor;
+      left.gameObject.AddComponent<UnityEngine.UI.Image>().color = outlineColor;
 
       var right = rect.CreateRectTransform("Right", true);
       right.anchorMin = new Vector2(1, 0);
       right.anchorMax = new Vector2(1 + GUIDE_MARGIN, 1);
-      right.gameObject.AddComponent<UI.Image>().color = outlineColor;
+      right.gameObject.AddComponent<UnityEngine.UI.Image>().color = outlineColor;
 
       var top = rect.CreateRectTransform("Top", true);
       top.anchorMin = new Vector2(-GUIDE_MARGIN, 1);
       top.anchorMax = new Vector2(1 + GUIDE_MARGIN, 1 + GUIDE_MARGIN);
-      top.gameObject.AddComponent<UI.Image>().color = outlineColor;
+      top.gameObject.AddComponent<UnityEngine.UI.Image>().color = outlineColor;
 
       var bottom = rect.CreateRectTransform("Bottom", true);
       bottom.anchorMin = new Vector2(-GUIDE_MARGIN, -GUIDE_MARGIN);
       bottom.anchorMax = new Vector2(1 + GUIDE_MARGIN, 0);
-      bottom.gameObject.AddComponent<UI.Image>().color = outlineColor;
+      bottom.gameObject.AddComponent<UnityEngine.UI.Image>().color = outlineColor;
 
       rect.CreateRectTransform("Center", true)
         .SetAnchors(0.5f - GUIDE_MARGIN_HALF, 0.5f + GUIDE_MARGIN_HALF, 0, 1)

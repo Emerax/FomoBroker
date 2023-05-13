@@ -1,37 +1,31 @@
 using Fusion;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private FusionCallbacksAPI fusion;
     [SerializeField]
-    private UIVisibility ui;
-    [SerializeField]
-    private TMP_InputField roomNameInput;
-    [SerializeField]
-    private Button joinOrHostButton;
-    [SerializeField]
-    private Button startButton;
+    private UI ui;
+
 
     private GameState gameState = GameState.START;
 
     private void Awake() {
         //UI Callbacks
-        joinOrHostButton.onClick.AddListener(JoinOrHostGame);
+        ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
         //startButton.onClick.AddListener(StartGame);
 
         //Network callbacks
         fusion.JoinGameEvent += OnJoinGame;
+        fusion.PlayerCountChangedEvent += OnPlayerCountChanged;
 
-        ui.ShowJoinOrHost();
+        EnterState(GameState.START);
     }
 
 
     private void JoinOrHostGame() {
         Debug.Log("Join or host pressed!");
-        fusion.JoinOrHostGame(roomNameInput.text);
+        fusion.JoinOrHostGame(ui.RoomNameInput.text);
     }
 
     private void StartGame() {
@@ -41,6 +35,10 @@ public class GameLoop : NetworkBehaviour {
     private void OnJoinGame(bool isHost) {
         Debug.Log($"Joined game as {(isHost ? "host" : "client")}");
         ui.ShowLobby();
+    }
+
+    private void OnPlayerCountChanged(int playerCount) {
+        ui.PlayerCountText.text = playerCount.ToString();
     }
 
     private void ChangeState(GameState newState) {
@@ -75,6 +73,7 @@ public class GameLoop : NetworkBehaviour {
     private void EnterState(GameState nextState) {
         switch(nextState) {
             case GameState.START:
+                ui.ShowJoinOrHost();
                 break;
             case GameState.LOBBY:
                 break;
