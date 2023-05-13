@@ -141,19 +141,6 @@ public class RunManager : MonoBehaviour {
             );
         }
 
-
-        //for(int ii = 0; ii < 3; ++ii) {
-        //    shiftCount[ii] = new int[2];
-        //    for(int jj = 0; jj < 2; ++jj) {
-        //        shiftCount[ii][jj] = Mathf.FloorToInt(runnerCountAtBase[ii] * attractionRatios[(ii + jj + 1) % BASE_COUNT]);
-        //        runnerCountAtBase[ii] -= shiftCount[ii][jj];
-        //    }
-        //}
-        //for(int ii = 0; ii < 3; ++ii) {
-        //    for(int jj = 0; jj < 2; ++jj) {
-        //        runnerCountAtBase[(ii + jj + 1) % BASE_COUNT] += shiftCount[ii][jj];
-        //    }
-        //}
         Run(shiftCount.ToArray());
     }
 
