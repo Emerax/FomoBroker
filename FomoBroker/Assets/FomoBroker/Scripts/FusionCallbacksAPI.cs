@@ -3,9 +3,11 @@ using Fusion.Sockets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
+    public Action JoinGameAsHostEvent;
+    public Action JoinGameAsClientEvent;
+
     private NetworkRunner networkRunner;
     private bool connected;
 
@@ -13,33 +15,20 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
         networkRunner = GetComponent<NetworkRunner>();
     }
 
-    private void Start() {
-        StartGame(GameMode.AutoHostOrClient);
-    }
-
     private void Update() {
         if(!connected) {
             return;
         }
-
-        if(Input.anyKeyDown) {
-            SayHelloRPC();
-        }
     }
 
-    public async void StartGame(GameMode mode) {
-        Debug.Log("Starting game");
-
-        // Start or join (depends on gamemode) a session with a specific name
+    public async void JoinOrHostGame(string roomName) {
         StartGameResult res = await networkRunner.StartGame(new StartGameArgs() {
-            GameMode = mode,
-            SessionName = "TestRoom",
-            Scene = SceneManager.GetActiveScene().buildIndex,
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+            GameMode = GameMode.AutoHostOrClient,
+            SessionName = roomName,
         });
 
         if(res.Ok) {
-            Debug.Log($"Start was ok! Server? {networkRunner.IsServer} Client? {networkRunner.IsClient}");
+            Debug.Log($"Start was ok! Mode? {networkRunner.Mode}, game mode: {networkRunner.GameMode}");
             connected = true;
         }
         else {
@@ -48,7 +37,7 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnConnectedToServer(NetworkRunner runner) {
-        Debug.Log("Connected");
+        Debug.Log($"Connected, mode is {runner.Mode}");
         connected = true;
     }
 
@@ -96,15 +85,5 @@ public class FusionCallbacksAPI : MonoBehaviour, INetworkRunnerCallbacks {
     }
 
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) {
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void SayHelloRPC(RpcInfo info = default) {
-        if(info.Source == networkRunner.LocalPlayer) {
-            Debug.Log("You say hi!");
-        }
-        else {
-            Debug.Log($"Other player says hello!");
-        }
     }
 }
