@@ -512,7 +512,7 @@ public class GameLoop : NetworkBehaviour {
         if(isHost) {
             switch(action) {
                 case ActionType.TRASH:
-                    attractionManager.ChangeAttraction(settings.trashEffect, target);
+                    attractionManager.ChangeAttraction(-settings.trashEffect, target);
                     break;
                 case ActionType.HYPE:
                     attractionManager.ChangeAttraction(settings.hypeEffect, target);

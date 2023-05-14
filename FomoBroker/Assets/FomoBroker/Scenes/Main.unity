@@ -360,17 +360,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   settings:
-    actionStateTime: 0
-    dividendStateTime: 0
-    rentStateTime: 0
-    tradingSelectStateTime: 0
-    startingMoney: 0
-    maxStocks: 0
-    hypeCost: 0
-    hypeEffect: 0
-    trashCost: 0
-    trashEffect: 0
-    rentPerStock: 0
+    actionStateTime: 10
+    dividendStateTime: 2
+    rentStateTime: 2
+    tradingSelectStateTime: 5
+    startingMoney: 100
+    maxStocks: 2
+    hypeCost: 10
+    hypeEffect: 15
+    trashCost: 10
+    trashEffect: 10
+    rentPerStock: 20
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   runManager: {fileID: 1631081915}
