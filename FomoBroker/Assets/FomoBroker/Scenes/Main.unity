@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &30015281 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6137797922494974369, guid: ad1727739706549d29cc709f623fe75b,
+    type: 3}
+  m_PrefabInstance: {fileID: 446468076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572d2558129b9df489653080faa11d4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &45687674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -349,8 +361,11 @@ MonoBehaviour:
   _interpolationDataSource: 0
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
-  actionStateTime: 10
+  actionStateTime: 3
+  tradingSelectStateTime: 10
   dividendStateTime: 2
+  rentStateTime: 3
+  rentPerStock: 20
   runManager: {fileID: 1631081915}
   temples:
   - {fileID: 1899481038}
@@ -685,10 +700,40 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: stockButtons.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: stockButtons.Array.data[0]
+      value: 
+      objectReference: {fileID: 927773438}
+    - target: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: stockButtons.Array.data[1]
+      value: 
+      objectReference: {fileID: 30015281}
+    - target: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: stockButtons.Array.data[2]
+      value: 
+      objectReference: {fileID: 1771036308}
     - target: {fileID: 3131399702003958973, guid: ad1727739706549d29cc709f623fe75b,
         type: 3}
       propertyPath: m_Name
       value: Stocks
+      objectReference: {fileID: 0}
+    - target: {fileID: 6137797922494974369, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: index
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7269758684426150122, guid: ad1727739706549d29cc709f623fe75b,
+        type: 3}
+      propertyPath: index
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad1727739706549d29cc709f623fe75b, type: 3}
@@ -1277,6 +1322,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8731a85623d6fd7478fd1fdfedfa9d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &927773438 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6619838576614725374, guid: ad1727739706549d29cc709f623fe75b,
+    type: 3}
+  m_PrefabInstance: {fileID: 446468076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572d2558129b9df489653080faa11d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &981416634 stripped
@@ -2041,6 +2098,18 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: df6a1d4a396a50847a82a6695f69e73e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af72eea0e193fbf4e8d18188928009c3, type: 3}
+--- !u!114 &1771036308 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7269758684426150122, guid: ad1727739706549d29cc709f623fe75b,
+    type: 3}
+  m_PrefabInstance: {fileID: 446468076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 572d2558129b9df489653080faa11d4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1773999521
 PrefabInstance:
   m_ObjectHideFlags: 0
