@@ -411,8 +411,12 @@ public class GameLoop : NetworkBehaviour {
                     foreach(int playerId in inventories.Keys) {
                         PlayerInventory inv = inventories[playerId];
                         for(int ii = 0; ii < 3; ++ii) {
-                            inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
-                            Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
+                            int amount = inv.stocks[ii] * runManager.runnerCountAtBase[ii];
+                            if(amount > 0) {
+                                GotOrNotMoneyFromTempleRPC(amount, ii, playerId);
+                                inv.money += amount;
+                                Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
+                            }
                         }
                         SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
@@ -424,7 +428,11 @@ public class GameLoop : NetworkBehaviour {
                     foreach(int playerId in inventories.Keys) {
                         PlayerInventory inv = inventories[playerId];
                         for(int ii = 0; ii < 3; ++ii) {
-                            inv.money -= inv.stocks[ii] * settings.rentPerStock;
+                            int amount = inv.stocks[ii] * settings.rentPerStock;
+                            if(amount > 0) {
+                                GotOrNotMoneyFromTempleRPC(-amount, ii, playerId);
+                                inv.money -= amount;
+                            }
                         }
                         SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
@@ -458,6 +466,13 @@ public class GameLoop : NetworkBehaviour {
         };
 
         ui.UpdatePhaseText(phaseText);
+    }
+
+    [Rpc]
+    void GotOrNotMoneyFromTempleRPC(int amount, int templeIndex, int playerID) {
+        if(playerID == fusion.PlayerID) {
+            spawnMoneyText(temples[templeIndex].MoneySpawnTransform.position, amount);
+        }
     }
 
     private void spawnMoneyText(Vector3 position, int money) {
