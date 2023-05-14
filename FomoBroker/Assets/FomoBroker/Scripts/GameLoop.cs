@@ -1,5 +1,6 @@
 using Fusion;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerInventory {
@@ -17,11 +18,11 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private float dividendStateTime = 3;
     [SerializeField]
-    private PlayerInventories inventoryHandler;
-    [SerializeField]
     private RunManager runManager;
     [SerializeField]
     private List<Temple> temples;
+    [SerializeField]
+    private Stock stocksVisuals;
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
@@ -32,11 +33,7 @@ public class GameLoop : NetworkBehaviour {
     private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
     private AttractionManager attractionManager;
 
-    Dictionary<int, int> playerIDToIndex = new Dictionary<int, int>();
-    List<int> playerIndexToID = new List<int>();
-    List<int> connectedPlayerIds = new List<int>();
-
-    List<PlayerInventory> inventories;
+    readonly Dictionary<int, PlayerInventory> inventories = new();
 
     private int playerCount;
 
@@ -86,7 +83,7 @@ public class GameLoop : NetworkBehaviour {
         Debug.Log("Runner count " + rc[0] + ", " + rc[1] + ", " + rc[2]);
     }
 
-    private void JoinOrHostGame() {        
+    private void JoinOrHostGame() {
         Debug.Log("Join or host pressed!");
         fusion.JoinOrHostGame(ui.RoomNameInput.text);
     }
@@ -108,7 +105,6 @@ public class GameLoop : NetworkBehaviour {
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) {
         Debug.Log("Player " + player.PlayerId + " joined");
-        connectedPlayerIds.Add(player.PlayerId);
     }
 
     private static void ChangeState(Changed<GameLoop> changed) {
@@ -126,7 +122,7 @@ public class GameLoop : NetworkBehaviour {
     }
 
     private int[] unpackStockCountArray(uint packed) {
-        return new int[3] { (int)(packed&0xff), (int)((packed >> 8) & 0xff), (int)((packed >> 16) & 0xff)};
+        return new int[3] { (int)(packed & 0xff), (int)((packed >> 8) & 0xff), (int)((packed >> 16) & 0xff) };
     }
 
     int[][] RandomizePlayerStocks() {
@@ -138,8 +134,8 @@ public class GameLoop : NetworkBehaviour {
 
 
         int[] remainingStocks = new int[3];
-        int stockCountPerBase = playerCount*2;
-        int maxStocksForPlayerPerType = stockCountPerBase-2;
+        int stockCountPerBase = playerCount * 2;
+        int maxStocksForPlayerPerType = stockCountPerBase - 2;
 
         int remainingTotalStocks = stockCountPerBase * 3;
         for(int ii = 0; ii < 3; ++ii) {
@@ -174,7 +170,7 @@ public class GameLoop : NetworkBehaviour {
                             stockCountForPlayer[pi][stockIndex] -= toGive;
                             overflow -= toGive;
                             if(overflow == 0) break;
-                        } 
+                        }
                     }
                 }
             }
@@ -204,30 +200,19 @@ public class GameLoop : NetworkBehaviour {
             case GameState.LOBBY:
                 ui.HideUI();
                 if(isHost) {
-                    foreach(int id in connectedPlayerIds) {
-                        playerIDToIndex[id] = playerIndexToID.Count;
-                        playerIndexToID.Add(id);
-                    }
-
                     int[] runnerCountForBase = RandomizeRunnerCountForBases();
-
-                    /*while(totalRunnerCount > 0) {
-                        totalRunnerCount--;
-                        runnerCountForBase[Random.Range(0, 3)]++;
-                    }*/
                     int[][] stockCountForPlayer = RandomizePlayerStocks();
 
-                    inventories = new List<PlayerInventory>();
-                    uint[] packedPlayerStockCount = new uint[playerCount];
-                    for(int pi = 0; pi < playerCount; ++pi) {
-                        packedPlayerStockCount[pi] = packStockCountArray(stockCountForPlayer[pi]);
-                        PlayerInventory inv = new PlayerInventory();
-                        inv.money = 100;
-                        inv.stocks = stockCountForPlayer[pi];
-                        inventories.Add(inv);
+                    foreach((int playerId, int i) in fusion.playerIds.Select((p, i) => (p, i))) {
+                        inventories[playerId] = new() {
+                            money = 100,
+                            stocks = stockCountForPlayer[i]
+                        };
+
+                        SetStocksRPC(packStockCountArray(stockCountForPlayer[i]), playerId);
                     }
 
-                    InitGameRPC(runnerCountForBase, packedPlayerStockCount);
+                    InitGameRPC(runnerCountForBase);
                 }
                 break;
             case GameState.ACTION:
@@ -270,12 +255,15 @@ public class GameLoop : NetworkBehaviour {
                 break;
             case GameState.DIVIDENDS:
                 if(isHost) {
-                    for(int pi = 0; pi < playerCount; ++pi) {
-                        PlayerInventory inv = inventories[pi];
+                    foreach(int playerId in inventories.Keys) {
+                        PlayerInventory inv = inventories[playerId];
                         for(int ii = 0; ii < 3; ++ii) {
                             inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
+                            Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
                         }
-                        Debug.Log("Player" + playerIndexToID[pi] + " has " + inv.money + " money");
+                        Debug.Log("Player" + playerId + " has " + inv.money + " money");
+                    }
+                    for(int pi = 0; pi < playerCount; ++pi) {
                     }
                 }
                 break;
@@ -290,16 +278,30 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
-    [Rpc] void RunRunnersRPC(int[] shift0, int[] shift1, int[] shift2) {
-        runManager.Run(new int[3][] {shift0, shift1, shift2});
+    [Rpc]
+    void RunRunnersRPC(int[] shift0, int[] shift1, int[] shift2) {
+        runManager.Run(new int[3][] { shift0, shift1, shift2 });
     }
 
-    [Rpc] void InitGameRPC(int[] runnerCountForBase, uint[] packedPlayerStockCount) {
+    [Rpc]
+    void InitGameRPC(int[] runnerCountForBase) {
         runManager.SpawnDudes(runnerCountForBase);
-
-        for(int pi = 0; pi < packedPlayerStockCount.Length; ++pi) {
-            int[] stockCount = unpackStockCountArray(packedPlayerStockCount[pi]);
-            Debug.Log("Player " + pi + " stock count: " + stockCount[0] + ", " + stockCount[1] + ", " + stockCount[2]);
+        if(!inventories.ContainsKey(fusion.PlayerID)) {
+            inventories[fusion.PlayerID] = new PlayerInventory();
         }
-    } 
+    }
+
+    [Rpc]
+    void ChangeMoneyRPC(int moneyChange, int playerID) {
+        inventories[playerID].money = moneyChange;
+    }
+
+    [Rpc]
+    private void SetStocksRPC(uint packedStocks, int playerID) {
+        if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
+            int[] stocks = unpackStockCountArray(packedStocks);
+            inventory.stocks = stocks;
+            stocksVisuals.UpdateVisuals(stocks);
+        }
+    }
 }
