@@ -383,7 +383,10 @@ MonoBehaviour:
     bidTime: 3
     startBidTime: 5
     bidStep: 10
-    playerColors: []
+    playerColors:
+    - {r: 1, g: 0, b: 0, a: 1}
+    - {r: 0.038832903, g: 1, b: 0, a: 1}
+    - {r: 0.05184698, g: 0, b: 1, a: 1}
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   runManager: {fileID: 1631081915}
