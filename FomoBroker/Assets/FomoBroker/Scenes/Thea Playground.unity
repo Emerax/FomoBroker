@@ -130,6 +130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3800322082638610423, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
+        type: 3}
+      propertyPath: typeBuilding
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4843706523488813469, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
       propertyPath: m_RootOrder
@@ -532,6 +537,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  typeBuilding: 1
+  religionBuilding: 0
 --- !u!1 &1239769215
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,7 +652,7 @@ PrefabInstance:
     - target: {fileID: 2529193521016625937, guid: df5713cdcaae34408825b816fc95f154,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2529193521016625937, guid: df5713cdcaae34408825b816fc95f154,
         type: 3}
@@ -729,7 +736,7 @@ PrefabInstance:
     - target: {fileID: 3131399702003958946, guid: ad1727739706549d29cc709f623fe75b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3131399702003958946, guid: ad1727739706549d29cc709f623fe75b,
         type: 3}
