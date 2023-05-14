@@ -13,7 +13,7 @@ public class TradingSelectStateRunner : IGameStateRunner {
     }
 
     public bool IsStateOver(out GameState nextState) {
-        nextState = GameState.ACTION;
+        nextState = GameState.TRADING_BID;
         return remainingTime <= 0;
     }
 

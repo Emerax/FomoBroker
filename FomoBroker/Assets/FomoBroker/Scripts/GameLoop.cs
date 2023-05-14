@@ -9,6 +9,13 @@ public class PlayerInventory {
     public bool[] stockMarkedForSale = new bool[3];
 }
 
+public class StockForSale {
+    public int playerID;
+    public int stockIndex;
+    public int currentPrice;
+    public int highestBidderPlayerID;
+}
+
 public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private FusionAPI fusion;
@@ -18,6 +25,8 @@ public class GameLoop : NetworkBehaviour {
     private float actionStateTime = 60;
     [SerializeField]
     private float tradingSelectStateTime = 10;
+    [SerializeField]
+    private float tradingBidStateTime = 10;
     [SerializeField]
     private float dividendStateTime = 3;
     [SerializeField]
@@ -46,6 +55,16 @@ public class GameLoop : NetworkBehaviour {
 
     readonly Dictionary<int, PlayerInventory> inventories = new();
 
+    List<StockForSale> stocksForSale = new();
+    StockForSale currentStockForSale;
+    const float BidTime = 3.0f;
+    const float StartBidTime = 5.0f;
+
+    [Networked]
+    float currentBiddingTimer {get; set; }
+
+    int bidStep = 10;
+
     private int playerCount;
 
     private void Awake() {
@@ -53,8 +72,9 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
-        stateRunners[GameState.RENT] = new RentStateRunner(dividendStateTime);
+        stateRunners[GameState.RENT] = new RentStateRunner(rentStateTime);
         stateRunners[GameState.TRADING_SELECT] = new TradingSelectStateRunner(tradingSelectStateTime);
+        stateRunners[GameState.TRADING_BID] = new TradingBidStateRunner(stocksForSale);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
@@ -75,9 +95,31 @@ public class GameLoop : NetworkBehaviour {
         EnterState(GameState.START);
     }
 
+    public void BidMore() {
+        Debug.Log("Bid more");
+        BidMoreOnStockRPC(fusion.PlayerID);
+    }
+
     public override void Spawned() {
         RemainingStateTime = -1;
     }
+
+    void goToNextStockForSale() {
+        if(!isHost) return;
+
+        if(currentStockForSale != null) {
+            stocksForSale.RemoveAt(stocksForSale.Count-1);
+        }
+
+        if(stocksForSale.Count > 0) {
+            currentStockForSale = stocksForSale[stocksForSale.Count-1];
+            SetCurrentStockForSaleRPC(currentStockForSale.playerID, currentStockForSale.stockIndex);
+            currentBiddingTimer = StartBidTime;
+        }
+        else {
+            currentStockForSale = null;
+        }
+    } 
 
     public override void FixedUpdateNetwork() {
         if(isHost) {
@@ -94,6 +136,38 @@ public class GameLoop : NetworkBehaviour {
 
         if(GameState is (GameState.ACTION or GameState.TRADING_SELECT)) {
             ui.UpdateTimer(RemainingStateTime);
+        }
+        if(GameState is GameState.TRADING_BID) {
+            if(isHost) {
+                currentBiddingTimer -= fusion.NetworkDeltaTime;
+                if(currentBiddingTimer <= 0.0f) {
+                    if(currentStockForSale != null) {
+                        if(currentStockForSale.highestBidderPlayerID == -1) {
+                            // Noone bought it, so return to seller
+                            currentStockForSale.highestBidderPlayerID = currentStockForSale.playerID;
+                            currentStockForSale.currentPrice = 0;
+                        }
+
+                        if(inventories.TryGetValue(currentStockForSale.highestBidderPlayerID, out PlayerInventory inventory)) {
+                            inventory.money -= currentStockForSale.currentPrice;
+                            inventory.stocks[currentStockForSale.stockIndex]++;
+                            ChangeMoneyRPC(inventory.money, currentStockForSale.highestBidderPlayerID);
+                            SetStocksRPC(packStockCountArray(inventory.stocks), currentStockForSale.highestBidderPlayerID);
+                        }
+                        if(inventories.TryGetValue(currentStockForSale.playerID, out PlayerInventory sellerInventory)) {
+                            if(currentStockForSale.playerID != currentStockForSale.highestBidderPlayerID) {
+                                // If the seller bought it, give the money to the bank
+                                sellerInventory.money += currentStockForSale.currentPrice;
+                            }
+
+                            ChangeMoneyRPC(sellerInventory.money, currentStockForSale.playerID);
+                        }
+
+                    }
+                    goToNextStockForSale();
+                }
+            }
+            ui.SetBidTimer(currentBiddingTimer);
         }
     }
 
@@ -119,6 +193,7 @@ public class GameLoop : NetworkBehaviour {
     private void StartGame() {
         Debug.Log("Start game pressed!");
         GameState = GameState.ACTION;
+        //GameState = GameState.TRADING_SELECT;
     }
 
     private void OnJoinGame(bool isHost) {
@@ -260,7 +335,13 @@ public class GameLoop : NetworkBehaviour {
                         for(int ii = 0; ii < 3; ++ii) {
                             if(inv.stockMarkedForSale[ii] && inv.stocks[ii] > 0) {
                                 inv.stocks[ii] -= 1;
-                                inv.money += 100;
+                                StockForSale sfs = new();
+                                sfs.playerID = playerId;
+                                sfs.stockIndex = ii;
+                                sfs.currentPrice = 0;
+                                sfs.highestBidderPlayerID = -1;
+                                stocksForSale.Add(sfs);
+                                //inv.money += 100;
                             }
                             inv.stockMarkedForSale[ii] = false;
                         }
@@ -273,6 +354,7 @@ public class GameLoop : NetworkBehaviour {
                 }
                 break;
             case GameState.TRADING_BID:
+                ui.CloseStockBidding();
                 break;
             case GameState.GAME_OVER:
                 break;
@@ -328,6 +410,10 @@ public class GameLoop : NetworkBehaviour {
             case GameState.TRADING_SELECT:
                 break;
             case GameState.TRADING_BID:
+                if(isHost) {
+                    goToNextStockForSale();    
+                }
+                ui.OpenStockBidding();
                 break;
             case GameState.GAME_OVER:
                 break;
@@ -377,10 +463,47 @@ public class GameLoop : NetworkBehaviour {
         }   
     }
 
+
     public void MarkMyStockForSale(int index, bool forSale) {
         if(GameState == GameState.TRADING_SELECT) {
             MarkStockForSaleRPC(index, forSale, fusion.PlayerID);
             stocksVisuals.stockButtons[index].SetForSale(forSale);
         }
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    private void BidMoreOnStockRPC(int playerID) {
+        if(!isHost) return;
+
+        if(currentStockForSale == null) return;
+
+
+        if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
+            if(inventory.money >= currentStockForSale.currentPrice+bidStep) {
+                currentStockForSale.currentPrice += bidStep;
+                currentStockForSale.highestBidderPlayerID = playerID;
+                currentBiddingTimer = Mathf.Max(BidTime, currentBiddingTimer);
+                SetCurrentStockPriceRPC(currentStockForSale.currentPrice, playerID);
+            }
+        }   
+    }    
+
+    [Rpc]
+    private void SetCurrentStockForSaleRPC(int sellerPlayerID, int stockIndex) {
+        ui.OpenStockBidding();
+        ui.SetBidPrice(0);
+        ui.sellerNameText.text = sellerPlayerID.ToString();
+        ui.highestBidderNameText.text = "None";
+    }
+
+    [Rpc]
+    private void SetCurrentStockPriceRPC(int price, int highestBidderPlayerId) {
+        ui.SetBidPrice(price);
+        ui.highestBidderNameText.text = highestBidderPlayerId.ToString();
+    }
+
+    [Rpc]
+    private void StopStockSaleRPC() {
+        ui.CloseStockBidding();
     }
 }

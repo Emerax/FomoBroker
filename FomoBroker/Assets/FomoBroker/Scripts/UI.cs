@@ -23,6 +23,12 @@ public class UI : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI moneyText;
 
+    public Transform bidPanel;
+    public TextMeshProUGUI bidPriceText;
+    public TextMeshProUGUI bidTimerText;
+    public TextMeshProUGUI sellerNameText;
+    public TextMeshProUGUI highestBidderNameText;
+    public Button bidMoreButton;
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
     public GameObject JoinOrHostRoot { get => joinOrHostRoot; }
@@ -31,6 +37,10 @@ public class UI : MonoBehaviour {
     public Button StartButton { get => startButton; }
     public TextMeshProUGUI PlayerCountText { get => playerCountText; }
     public TextMeshProUGUI TimerText { get => timerText; }
+
+    void Start() {
+        bidPanel.gameObject.SetActive(false);
+    }
 
     public void ShowJoinOrHost() {
         JoinOrHostRoot.SetActive(true);
@@ -45,6 +55,18 @@ public class UI : MonoBehaviour {
     public void HideUI() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(false);
+    }
+
+    public void BidMoreButtonPressed() {
+
+    }
+
+    public void SetBidPrice(int cost) {
+        bidPriceText.text = $"${cost}";
+    }
+
+    public void SetBidTimer(float remaining) {
+        bidTimerText.text = remaining.ToString();
     }
 
     public void UpdateMoney(int money) {
@@ -62,5 +84,13 @@ public class UI : MonoBehaviour {
         //TimerText.gameObject.SetActive(time >= 0);
         //TimerText.text = TimeSpan.FromSeconds(time).ToString("mm':'ss");
         clock.SetTime(time, 10.0f);
+    }
+
+    public void OpenStockBidding() {
+        bidPanel.gameObject.SetActive(true);
+    }
+
+    public void CloseStockBidding() {
+        bidPanel.gameObject.SetActive(false);
     }
 }
