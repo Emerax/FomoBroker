@@ -18,6 +18,9 @@ public class UI : MonoBehaviour {
     private Button startButton;
     [SerializeField]
     private TextMeshProUGUI timerText;
+    [SerializeField]
+    private Clock clock;
+
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
     public GameObject JoinOrHostRoot { get => joinOrHostRoot; }
@@ -43,7 +46,9 @@ public class UI : MonoBehaviour {
     }
 
     public void UpdateTimer(float time) {
-        TimerText.gameObject.SetActive(time >= 0);
-        TimerText.text = TimeSpan.FromSeconds(time).ToString("mm':'ss");
+        TimerText.gameObject.SetActive(false);
+        //TimerText.gameObject.SetActive(time >= 0);
+        //TimerText.text = TimeSpan.FromSeconds(time).ToString("mm':'ss");
+        clock.SetTime(time, 10.0f);
     }
 }
