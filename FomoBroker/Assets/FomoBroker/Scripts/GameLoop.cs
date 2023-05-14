@@ -33,6 +33,7 @@ public struct SettingsStruct {
     public float bidTime;
     public float startBidTime;
     public int bidStep;
+    public List<Color> playerColors;
 }
 
 public class GameLoop : NetworkBehaviour {
