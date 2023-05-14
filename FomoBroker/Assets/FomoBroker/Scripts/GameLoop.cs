@@ -22,11 +22,10 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private List<Temple> temples;
     [SerializeField]
-<<<<<<< HEAD
     private Stock stocksVisuals;
-=======
+    [SerializeField]
     private List<actionableBuilding> buildings;
->>>>>>> 8a28796 (setup actionManager)
+
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
