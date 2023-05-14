@@ -363,6 +363,7 @@ MonoBehaviour:
     actionStateTime: 10
     dividendStateTime: 10
     rentStateTime: 5
+    tradingSelectStateTime: 10
     startingMoney: 100
     maxStocks: 3
     hypeCost: 10

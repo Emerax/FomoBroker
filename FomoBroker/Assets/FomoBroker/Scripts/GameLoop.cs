@@ -270,7 +270,7 @@ public class GameLoop : NetworkBehaviour {
                             }
                             inv.stockMarkedForSale[ii] = false;
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         SetStocksRPC(packStockCountArray(inv.stocks), playerId);
                     }
                 }
@@ -418,7 +418,7 @@ public class GameLoop : NetworkBehaviour {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             inventory.stockMarkedForSale[index] = forSale;
             Debug.Log("Mark stock " + index + " for sale " + forSale);
-        }   
+        }
     }
 
     public void MarkMyStockForSale(int index, bool forSale) {
