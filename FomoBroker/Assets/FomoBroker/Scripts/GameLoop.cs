@@ -240,7 +240,7 @@ public class GameLoop : NetworkBehaviour {
 
                     foreach((int playerId, int i) in fusion.PlayerIds.Select((p, i) => (p, i))) {
                         inventories[playerId] = new() {
-                            money = 100,
+                            money = settings.startingMoney,
                             stocks = stockCountForPlayer[i]
                         };
 
@@ -343,7 +343,7 @@ public class GameLoop : NetworkBehaviour {
     }
 
     private void HandleAction(ActionType action, int target) {
-        Debug.Log($"Handle action {action} for target {target}");
+        Debug.Log($"Handle action {action} for target {target}. State is {GameState}");
         if(GameState is not GameState.ACTION) {
             return;
         }
@@ -360,8 +360,8 @@ public class GameLoop : NetworkBehaviour {
             ActionType.HYPE => settings.hypeCost,
             _ => throw new System.NotImplementedException(),
         };
-
         int balance = myMoney - actionCost;
+        Debug.Log($"My money: {myMoney}, cost: {actionCost}. Balance: {balance}");
         if(balance >= 0) {
             SetMoneyRPC(balance, fusion.PlayerID);
             return true;
@@ -379,7 +379,9 @@ public class GameLoop : NetworkBehaviour {
     void InitGameRPC(int[] runnerCountForBase) {
         runManager.SpawnDudes(runnerCountForBase);
         if(!inventories.ContainsKey(fusion.PlayerID)) {
-            inventories[fusion.PlayerID] = new PlayerInventory();
+            inventories[fusion.PlayerID] = new PlayerInventory() {
+                money = settings.startingMoney
+            };
         }
     }
 
