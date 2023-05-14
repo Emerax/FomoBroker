@@ -12,12 +12,14 @@ public class PlayerInventory {
 public struct SettingsStruct {
     public float actionStateTime;
     public float dividendStateTime;
+    public float rentStateTime;
     public int startingMoney;
     public int maxStocks;
     public int hypeCost;
     public float hypeEffect;
     public int trashCost;
     public float trashEffect;
+    public int rentPerStock;
 }
 
 public class GameLoop : NetworkBehaviour {
@@ -55,6 +57,7 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.ACTION] = new ActionStateRunner(settings.actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(settings.dividendStateTime);
+        stateRunners[GameState.RENT] = new RentStateRunner(settings.dividendStateTime);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
@@ -292,6 +295,16 @@ public class GameLoop : NetworkBehaviour {
                 }
                 break;
             case GameState.RENT:
+                if(isHost) {
+                    foreach(int playerId in inventories.Keys) {
+                        PlayerInventory inv = inventories[playerId];
+                        for(int ii = 0; ii < 3; ++ii) {
+                            inv.money -= inv.stocks[ii] * rentPerStock;
+                        }
+                        ChangeMoneyRPC(inv.money, playerId);
+                        Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
+                    }   
+                }
                 break;
             case GameState.TRADING_SELECT:
                 break;

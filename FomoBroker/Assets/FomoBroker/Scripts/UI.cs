@@ -48,6 +48,12 @@ public class UI : MonoBehaviour {
     }
 
     public void UpdateMoney(int money) {
+        if(money < 0) {
+            moneyText.color = new Color(1.0f, 0.0f, 0.0f);
+        }
+        else {
+            moneyText.color = new Color(0.67f, 0.81f, 0.61f);
+        }
         moneyText.text = $"${money}";
     }
 
