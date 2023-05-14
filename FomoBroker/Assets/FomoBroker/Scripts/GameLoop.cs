@@ -33,6 +33,7 @@ public struct SettingsStruct {
     public float bidTime;
     public float startBidTime;
     public int bidStep;
+    public List<Color> playerColors;
 }
 
 public class GameLoop : NetworkBehaviour {
@@ -279,6 +280,17 @@ public class GameLoop : NetworkBehaviour {
                         }
                     }
                 }
+            }
+        }
+        int giveIfZeroNextIndex = 0;
+        for(int pi = 0; pi < playerCount; ++pi) {
+            int stockCount = 0;
+            for(int stockIndex = 0; stockIndex < 3; ++stockIndex) {
+                stockCount += stockCountForPlayer[pi][stockIndex];
+            }
+            if(stockCount == 0) {
+                stockCountForPlayer[pi][giveIfZeroNextIndex++]++;
+                if(giveIfZeroNextIndex >= 3) giveIfZeroNextIndex = 0;
             }
         }
         return stockCountForPlayer;
