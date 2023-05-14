@@ -427,6 +427,8 @@ GameObject:
   - component: {fileID: 6807459952911330269}
   - component: {fileID: 5366703564984801975}
   - component: {fileID: 1899481038}
+  - component: {fileID: 1899481041}
+  - component: {fileID: 3179171625356378538}
   m_Layer: 0
   m_Name: church_temple
   m_TagString: Untagged
@@ -478,6 +480,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1899481041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6139290775680872807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: 1
+  religionBuilding: 0
+--- !u!114 &3179171625356378538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6139290775680872807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ad126a022433f4c98099a34f01ad84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7731385500707865142

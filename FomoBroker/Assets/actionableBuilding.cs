@@ -1,34 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 //using UnityEngine.EventSystems;
 
-public class actionableBuilding : MonoBehaviour
-{
-    public Action<ActionType,int> ActionEvent;
+public class actionableBuilding : MonoBehaviour {
+    public Action<ActionType, int> ActionEvent;
+
     [SerializeField]
     private ActionType action;
-    
-
-
-   
-
-
-    //determine this building
-   
-     [SerializeField]
+    [SerializeField]
     private int religionBuilding = 1; //from1 1 left to right 
+    //[SerializeField]
+    //private GameObject clickHint;
     // Start is called before the first frame update
-    void OnMouseDown()
-    {
+    void OnMouseDown() {
         Debug.Log("this is clicked building");
-        ActionEvent.Invoke(action,religionBuilding);
+        ActionEvent.Invoke(action, religionBuilding);
     }
 
-    void OnMouseEnter()
-    {
-       gameObject.transform.GetChild(0).gameObject.SetActive(true); //shows clickHint on hover
-        Debug.Log("this is hovered over building");
-    }
+    //void OnMouseEnter() {
+    //    clickHint.gameObject.SetActive(true);
+    //}
+
+    //void OnMouseExit() {
+    //    clickHint.gameObject.SetActive(false);
+    //}
 }

@@ -500,6 +500,7 @@ GameObject:
   - component: {fileID: 7373854605306373857}
   - component: {fileID: 984726955227233887}
   - component: {fileID: 1657222258295915924}
+  - component: {fileID: 8673510231476502252}
   m_Layer: 0
   m_Name: Religion_stock
   m_TagString: Untagged
@@ -554,6 +555,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forSaleSymbol: {fileID: 4066001774564570057}
+  index: 0
+--- !u!114 &8673510231476502252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7373854605306373856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ad126a022433f4c98099a34f01ad84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4604911305520452642
 PrefabInstance:
   m_ObjectHideFlags: 0

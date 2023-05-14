@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +12,8 @@ public class UI : MonoBehaviour {
     [SerializeField]
     private GameObject lobbyRoot;
     [SerializeField]
+    private TextMeshProUGUI roomNameText;
+    [SerializeField]
     private TextMeshProUGUI playerCountText;
     [SerializeField]
     private Button startButton;
@@ -22,6 +23,10 @@ public class UI : MonoBehaviour {
     private Clock clock;
     [SerializeField]
     private TextMeshProUGUI moneyText;
+    [SerializeField]
+    private GameObject gameOverRoot;
+    [SerializeField]
+    private TextMeshProUGUI phaseText;
 
     public Transform bidPanel;
     public TextMeshProUGUI bidPriceText;
@@ -37,6 +42,7 @@ public class UI : MonoBehaviour {
     public Button StartButton { get => startButton; }
     public TextMeshProUGUI PlayerCountText { get => playerCountText; }
     public TextMeshProUGUI TimerText { get => timerText; }
+    public GameObject GameOverRoot { get => gameOverRoot; }
 
     void Start() {
         bidPanel.gameObject.SetActive(false);
@@ -45,16 +51,28 @@ public class UI : MonoBehaviour {
     public void ShowJoinOrHost() {
         JoinOrHostRoot.SetActive(true);
         LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(false);
     }
 
     public void ShowLobby() {
         JoinOrHostRoot.SetActive(false);
+        
         LobbyRoot.SetActive(true);
+        roomNameText.text = "Room: "+roomNameInput.text;
+        GameOverRoot.SetActive(false);
+        
+    }
+
+    public void ShowGameOver() {
+        JoinOrHostRoot.SetActive(false);
+        LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(true);
     }
 
     public void HideUI() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(false);
     }
 
     public void BidMoreButtonPressed() {
@@ -92,5 +110,9 @@ public class UI : MonoBehaviour {
 
     public void CloseStockBidding() {
         bidPanel.gameObject.SetActive(false);
+    }
+
+    public void UpdatePhaseText(string newText) {
+        phaseText.text = newText;
     }
 }

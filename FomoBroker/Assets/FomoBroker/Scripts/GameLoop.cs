@@ -16,24 +16,30 @@ public class StockForSale {
     public int highestBidderPlayerID;
 }
 
+[System.Serializable]
+public struct SettingsStruct {
+    public float actionStateTime;
+    public float dividendStateTime;
+    public float rentStateTime;
+    public float tradingSelectStateTime;
+    public int startingMoney;
+    public int maxStocks;
+    public int hypeCost;
+    public float hypeEffect;
+    public int trashCost;
+    public float trashEffect;
+    public int rentPerStock;
+}
+
 public class GameLoop : NetworkBehaviour {
+    [SerializeField]
+    private SettingsStruct settings;
     [SerializeField]
     private FusionAPI fusion;
     [SerializeField]
     private UI ui;
     [SerializeField]
-    private float actionStateTime = 60;
-    [SerializeField]
-    private float tradingSelectStateTime = 10;
-    [SerializeField]
-    private float tradingBidStateTime = 10;
-    [SerializeField]
-    private float dividendStateTime = 3;
-    [SerializeField]
-    private float rentStateTime = 3;
-    [SerializeField]
-    private int rentPerStock = 20;
-    [SerializeField]
+
     private RunManager runManager;
     [SerializeField]
     private List<Temple> temples;
@@ -41,7 +47,6 @@ public class GameLoop : NetworkBehaviour {
     private Stock stocksVisuals;
     [SerializeField]
     private List<actionableBuilding> buildings;
-
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
@@ -69,16 +74,16 @@ public class GameLoop : NetworkBehaviour {
 
     private void Awake() {
         //Setup runners
-        stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
+        stateRunners[GameState.ACTION] = new ActionStateRunner(settings.actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
-        stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
-        stateRunners[GameState.RENT] = new RentStateRunner(rentStateTime);
-        stateRunners[GameState.TRADING_SELECT] = new TradingSelectStateRunner(tradingSelectStateTime);
+        stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(settings.dividendStateTime);
+        stateRunners[GameState.RENT] = new RentStateRunner(settings.dividendStateTime);
+        stateRunners[GameState.TRADING_SELECT] = new TradingSelectStateRunner(settings.tradingSelectStateTime);
         stateRunners[GameState.TRADING_BID] = new TradingBidStateRunner(stocksForSale);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
-        
+        actionManager.ActionEvent += HandleAction;
 
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
@@ -151,7 +156,7 @@ public class GameLoop : NetworkBehaviour {
                         if(inventories.TryGetValue(currentStockForSale.highestBidderPlayerID, out PlayerInventory inventory)) {
                             inventory.money -= currentStockForSale.currentPrice;
                             inventory.stocks[currentStockForSale.stockIndex]++;
-                            ChangeMoneyRPC(inventory.money, currentStockForSale.highestBidderPlayerID);
+                            SetMoneyRPC(inventory.money, currentStockForSale.highestBidderPlayerID);
                             SetStocksRPC(packStockCountArray(inventory.stocks), currentStockForSale.highestBidderPlayerID);
                         }
                         if(inventories.TryGetValue(currentStockForSale.playerID, out PlayerInventory sellerInventory)) {
@@ -160,7 +165,7 @@ public class GameLoop : NetworkBehaviour {
                                 sellerInventory.money += currentStockForSale.currentPrice;
                             }
 
-                            ChangeMoneyRPC(sellerInventory.money, currentStockForSale.playerID);
+                            SetMoneyRPC(sellerInventory.money, currentStockForSale.playerID);
                         }
 
                     }
@@ -307,9 +312,9 @@ public class GameLoop : NetworkBehaviour {
                     int[][] stockCountForPlayer = RandomizePlayerStocks();
                     InitGameRPC(runnerCountForBase);
 
-                    foreach((int playerId, int i) in fusion.playerIds.Select((p, i) => (p, i))) {
+                    foreach((int playerId, int i) in fusion.PlayerIds.Select((p, i) => (p, i))) {
                         inventories[playerId] = new() {
-                            money = 100,
+                            money = settings.startingMoney,
                             stocks = stockCountForPlayer[i]
                         };
 
@@ -317,6 +322,7 @@ public class GameLoop : NetworkBehaviour {
                     }
 
                 }
+                //ui.ShowGameOver();
                 break;
             case GameState.ACTION:
                 ui.UpdateTimer(-1);
@@ -345,7 +351,7 @@ public class GameLoop : NetworkBehaviour {
                             }
                             inv.stockMarkedForSale[ii] = false;
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         SetStocksRPC(packStockCountArray(inv.stocks), playerId);
                     }
                 }
@@ -390,7 +396,7 @@ public class GameLoop : NetworkBehaviour {
                             inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
                             Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
                     }
                 }
@@ -400,11 +406,11 @@ public class GameLoop : NetworkBehaviour {
                     foreach(int playerId in inventories.Keys) {
                         PlayerInventory inv = inventories[playerId];
                         for(int ii = 0; ii < 3; ++ii) {
-                            inv.money -= inv.stocks[ii] * rentPerStock;
+                            inv.money -= inv.stocks[ii] * settings.rentPerStock;
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
-                    }   
+                    }
                 }
                 break;
             case GameState.TRADING_SELECT:
@@ -416,8 +422,52 @@ public class GameLoop : NetworkBehaviour {
                 ui.OpenStockBidding();
                 break;
             case GameState.GAME_OVER:
+                ui.ShowGameOver();
                 break;
         }
+
+        string phaseText = nextState switch {
+            GameState.START
+            or GameState.LOBBY
+            or GameState.MIGRATION
+            or GameState.DIVIDENDS
+            or GameState.RENT
+            or GameState.GAME_OVER => "",
+            GameState.ACTION => "Pay for actions to influence the consumers!",
+            GameState.TRADING_SELECT => "Optionally select a stock for sale",
+            GameState.TRADING_BID => "Bid for stocks!",
+            _ => throw new System.NotImplementedException(),
+        };
+
+        ui.UpdatePhaseText(phaseText);
+    }
+
+    private void HandleAction(ActionType action, int target) {
+        Debug.Log($"Handle action {action} for target {target}. State is {GameState}");
+        if(GameState is not GameState.ACTION) {
+            return;
+        }
+        if(TryPayForAction(action)) {
+            Debug.Log($"Was able to pay!");
+            PerformActionRPC(action, target);
+        }
+    }
+
+    private bool TryPayForAction(ActionType action) {
+        int myMoney = inventories[fusion.PlayerID].money;
+        int actionCost = action switch {
+            ActionType.TRASH => settings.trashCost,
+            ActionType.HYPE => settings.hypeCost,
+            _ => throw new System.NotImplementedException(),
+        };
+        int balance = myMoney - actionCost;
+        Debug.Log($"My money: {myMoney}, cost: {actionCost}. Balance: {balance}");
+        if(balance >= 0) {
+            SetMoneyRPC(balance, fusion.PlayerID);
+            return true;
+        }
+
+        return false;
     }
 
     [Rpc]
@@ -429,12 +479,14 @@ public class GameLoop : NetworkBehaviour {
     void InitGameRPC(int[] runnerCountForBase) {
         runManager.SpawnDudes(runnerCountForBase);
         if(!inventories.ContainsKey(fusion.PlayerID)) {
-            inventories[fusion.PlayerID] = new PlayerInventory();
+            inventories[fusion.PlayerID] = new PlayerInventory() {
+                money = settings.startingMoney
+            };
         }
     }
 
-    [Rpc]
-    void ChangeMoneyRPC(int moneyChange, int playerID) {
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    void SetMoneyRPC(int moneyChange, int playerID) {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             inventory.money = moneyChange;
             Debug.Log("Player" + playerID + " has " + inventory.money + " money");
@@ -449,18 +501,35 @@ public class GameLoop : NetworkBehaviour {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             int[] stocks = unpackStockCountArray(packedStocks);
             inventory.stocks = stocks;
-            stocksVisuals.UpdateVisuals(stocks);
+            if(playerID == fusion.PlayerID) {
+                stocksVisuals.UpdateVisuals(stocks);
+            }
         }
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    private void PerformActionRPC(ActionType action, int target) {
+        if(isHost) {
+            switch(action) {
+                case ActionType.TRASH:
+                    attractionManager.ChangeAttraction(settings.trashEffect, target);
+                    break;
+                case ActionType.HYPE:
+                    attractionManager.ChangeAttraction(settings.hypeEffect, target);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void MarkStockForSaleRPC(int index, bool forSale, int playerID) {
         if(!isHost) return;
 
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             inventory.stockMarkedForSale[index] = forSale;
             Debug.Log("Mark stock " + index + " for sale " + forSale);
-        }   
+        }
     }
 
 

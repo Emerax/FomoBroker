@@ -17,7 +17,12 @@ public class AttractionManager {
         };
     }
 
+    public void ChangeAttraction(float value, int target) {
+        temples[target].ChangeAttraction(value);
+    }
+
     public void DecayAttraction() {
         //TODO: Implement attraction decay here if we want it.
     }
+
 }

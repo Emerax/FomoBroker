@@ -14,13 +14,10 @@ public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
 
     public float NetworkDeltaTime => networkRunner.DeltaTime;
     public int PlayerID => networkRunner.LocalPlayer.PlayerId;
-    public List<int> playerIds => networkRunner.ActivePlayers.Select(p => p.PlayerId).ToList();
+    public List<int> PlayerIds => networkRunner.ActivePlayers.Select(p => p.PlayerId).ToList();
 
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
-    }
-
-    private void Update() {
     }
 
     public async void JoinOrHostGame(string roomName) {
@@ -39,6 +36,10 @@ public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
         }
+    }
+
+    public void Disconnect() {
+        networkRunner.Shutdown();
     }
 
     public void OnConnectedToServer(NetworkRunner runner) {
