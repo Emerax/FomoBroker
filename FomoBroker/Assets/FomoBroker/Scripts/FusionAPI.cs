@@ -38,6 +38,10 @@ public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
         }
     }
 
+    public void Disconnect() {
+        networkRunner.Shutdown();
+    }
+
     public void OnConnectedToServer(NetworkRunner runner) {
         Debug.Log($"Connected, mode is {runner.Mode}");
     }

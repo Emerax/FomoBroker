@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 4843706523488813469}
   - component: {fileID: 3800322082638610423}
   - component: {fileID: 3373357325310629326}
+  - component: {fileID: 4565313097595348699}
   m_Layer: 0
   m_Name: trashHouse
   m_TagString: Untagged
@@ -248,8 +249,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   action: 0
-  clickHint: {fileID: 1317068762246929566}
   religionBuilding: 1
+  clickHint: {fileID: 1317068762246929566}
 --- !u!136 &3373357325310629326
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -264,6 +265,18 @@ CapsuleCollider:
   m_Height: 49.423553
   m_Direction: 1
   m_Center: {x: 0, y: -3.7377357, z: 1.1845016}
+--- !u!114 &4565313097595348699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6915835903385125994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ad126a022433f4c98099a34f01ad84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7416486875883737183
 GameObject:
   m_ObjectHideFlags: 0

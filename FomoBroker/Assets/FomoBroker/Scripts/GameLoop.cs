@@ -341,6 +341,9 @@ public class GameLoop : NetworkBehaviour {
     }
 
     private void HandleAction(ActionType action, int target) {
+        if(GameState is not GameState.ACTION) {
+            return;
+        }
         if(TryPayForAction(action)) {
             PerformActionRPC(action, target);
         }

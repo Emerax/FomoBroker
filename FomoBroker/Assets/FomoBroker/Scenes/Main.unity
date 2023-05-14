@@ -1384,7 +1384,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 773567453}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537084234}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
@@ -1438,7 +1438,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 881074983}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1684846710}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
@@ -1689,12 +1689,6 @@ Transform:
   m_Father: {fileID: 753842222}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1496954228 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6139290775680872807, guid: 762e09f6934798b4a8e69a66d3427473,
-    type: 3}
-  m_PrefabInstance: {fileID: 148011289}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1519171124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,27 +1720,18 @@ Transform:
   m_Father: {fileID: 1831974821}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1537084234 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5691408873240802615, guid: a32c5bbdc0036514bb5af2cb9d34c51b,
+--- !u!114 &1537084236 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1537084236, guid: a32c5bbdc0036514bb5af2cb9d34c51b,
     type: 3}
   m_PrefabInstance: {fileID: 773567453}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1537084236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537084234}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 1
-  religionBuilding: 2
-  clickHint: {fileID: 0}
 --- !u!1001 &1622311673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2201,27 +2186,18 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: df6a1d4a396a50847a82a6695f69e73e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af72eea0e193fbf4e8d18188928009c3, type: 3}
---- !u!1 &1684846710 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1860717362438413656, guid: 663cb2e0db1998545adc012ee0c3d6eb,
+--- !u!114 &1684846712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1684846712, guid: 663cb2e0db1998545adc012ee0c3d6eb,
     type: 3}
   m_PrefabInstance: {fileID: 881074983}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1684846712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1684846710}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 1
-  religionBuilding: 1
-  clickHint: {fileID: 0}
 --- !u!1001 &1773999521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2402,27 +2378,24 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 148011289}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496954228}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1899481041
+--- !u!114 &1899481041 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 1899481041, guid: 762e09f6934798b4a8e69a66d3427473,
+    type: 3}
+  m_PrefabInstance: {fileID: 148011289}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496954228}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  action: 1
-  religionBuilding: 0
-  clickHint: {fileID: 0}
 --- !u!1 &1928982146
 GameObject:
   m_ObjectHideFlags: 0

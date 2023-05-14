@@ -87,3 +87,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6341cf14f9f994ab0bae445381fe08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1537084236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5691408873240802615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: 1
+  religionBuilding: 2
+--- !u!114 &1537084237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5691408873240802615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ad126a022433f4c98099a34f01ad84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &9105781523518756494
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5691408873240802615}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 29.401024, y: 25.37353, z: 33.05869}
+  m_Center: {x: 0.13121793, y: 12.186681, z: -1.7938938}
