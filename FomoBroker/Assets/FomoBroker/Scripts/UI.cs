@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +23,8 @@ public class UI : MonoBehaviour {
     private TextMeshProUGUI moneyText;
     [SerializeField]
     private GameObject gameOverRoot;
+    [SerializeField]
+    private TextMeshProUGUI phaseText;
 
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
@@ -74,5 +75,9 @@ public class UI : MonoBehaviour {
         //TimerText.gameObject.SetActive(time >= 0);
         //TimerText.text = TimeSpan.FromSeconds(time).ToString("mm':'ss");
         clock.SetTime(time, 10.0f);
+    }
+
+    public void UpdatePhaseText(string newText) {
+        phaseText.text = newText;
     }
 }
