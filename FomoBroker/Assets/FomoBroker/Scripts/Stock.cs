@@ -10,11 +10,10 @@ public class Stock : MonoBehaviour {
     [SerializeField]
     private List<GameObject> religion3Shares = new();
 
-    private void Update() {
-        UpdateVisuals();
-    }
-
-    public void UpdateVisuals() {
+    public void UpdateVisuals(int[] stocks) {
+        religion1 = stocks[0];
+        religion2 = stocks[1];
+        religion3 = stocks[2];
         // update visibility of regligion=numshares to show corresponding shares gameobjects
         //religion 1
         for(int i = 0; i < religion1Shares.Count; i++) {

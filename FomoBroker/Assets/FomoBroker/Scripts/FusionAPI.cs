@@ -11,10 +11,10 @@ public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
     public Action<int> PlayerCountChangedEvent;
 
     private NetworkRunner networkRunner;
-    private int playerID;
 
     public float NetworkDeltaTime => networkRunner.DeltaTime;
-    public int PlayerID => playerID;
+    public int PlayerID => networkRunner.LocalPlayer.PlayerId;
+    public List<int> playerIds => networkRunner.ActivePlayers.Select(p => p.PlayerId).ToList();
 
     private void Awake() {
         networkRunner = GetComponent<NetworkRunner>();
@@ -35,7 +35,6 @@ public class FusionAPI : MonoBehaviour, INetworkRunnerCallbacks {
             JoinGameEvent.Invoke(networkRunner.IsServer);
             int playerCount = networkRunner.ActivePlayers.Count();
             PlayerCountChangedEvent.Invoke(playerCount);
-            playerID = playerCount - 1;
         }
         else {
             Debug.Log($"Error starting: {res.ErrorMessage}");
