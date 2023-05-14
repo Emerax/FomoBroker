@@ -430,9 +430,9 @@ public class GameLoop : NetworkBehaviour {
             GameState.START
             or GameState.LOBBY
             or GameState.MIGRATION
-            or GameState.DIVIDENDS
-            or GameState.RENT
             or GameState.GAME_OVER => "",
+            GameState.DIVIDENDS => "Payout time!",
+            GameState.RENT => "Time to pay rent!",
             GameState.ACTION => "Pay for actions to influence the consumers!",
             GameState.TRADING_SELECT => "Optionally select a stock for sale",
             GameState.TRADING_BID => "Bid for stocks!",
