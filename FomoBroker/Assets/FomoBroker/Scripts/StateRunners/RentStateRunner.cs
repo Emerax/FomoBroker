@@ -1,9 +1,9 @@
-public class DividendsStateRunner : IGameStateRunner {
+public class RentStateRunner : IGameStateRunner {
     private readonly float stateTime;
 
     private float remainingTime;
 
-    public DividendsStateRunner(float stateTime) {
+    public RentStateRunner(float stateTime) {
         this.stateTime = stateTime;
         Reset();
     }
@@ -13,7 +13,7 @@ public class DividendsStateRunner : IGameStateRunner {
     }
 
     public bool IsStateOver(out GameState nextState) {
-        nextState = GameState.RENT;
+        nextState = GameState.ACTION;
         return remainingTime <= 0;
     }
 

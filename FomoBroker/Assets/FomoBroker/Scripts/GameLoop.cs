@@ -18,6 +18,10 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private float dividendStateTime = 3;
     [SerializeField]
+    private float rentStateTime = 3;
+    [SerializeField]
+    private int rentPerStock = 20;
+    [SerializeField]
     private RunManager runManager;
     [SerializeField]
     private List<Temple> temples;
@@ -46,6 +50,7 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
+        stateRunners[GameState.RENT] = new RentStateRunner(dividendStateTime);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
@@ -283,6 +288,16 @@ public class GameLoop : NetworkBehaviour {
                 }
                 break;
             case GameState.RENT:
+                if(isHost) {
+                    foreach(int playerId in inventories.Keys) {
+                        PlayerInventory inv = inventories[playerId];
+                        for(int ii = 0; ii < 3; ++ii) {
+                            inv.money -= inv.stocks[ii] * rentPerStock;
+                        }
+                        ChangeMoneyRPC(inv.money, playerId);
+                        Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
+                    }   
+                }
                 break;
             case GameState.TRADING_SELECT:
                 break;
