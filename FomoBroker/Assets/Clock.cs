@@ -9,12 +9,15 @@ public class Clock : MonoBehaviour
     bool hasCompleted = false;
     float buzzTimer;
     Vector3 restPosition;
+    public AudioClip ringSound; 
+    AudioSource audioSource;
 
 
     // Start is called before the first frame update
     void Start()
     {   
         restPosition = transform.position;
+        audioSource = GetComponent<AudioSource>(); 
     }
 
     // Update is called once per frame
@@ -25,6 +28,7 @@ public class Clock : MonoBehaviour
             if(buzzTimer < 0.0f) {
                 buzzing = false;
                 transform.position = restPosition;
+                audioSource.Stop();
             }
             else {
                 transform.position = restPosition + Random.onUnitSphere * 2.0f;
@@ -39,11 +43,14 @@ public class Clock : MonoBehaviour
                 buzzing = true;
                 buzzTimer = 2.0f;
                 hasCompleted = true;
+                if(audioSource.isPlaying) audioSource.Stop();
+                audioSource.PlayOneShot(ringSound);
             }
         }
         else {
             hasCompleted = false;
             buzzing = false;
+            if(!audioSource.isPlaying) audioSource.Play(0);
         }
         time = (float)(int)time;
         arm.localEulerAngles = new Vector3(-90 - (time/oneRoundTime) * 360.0f, -90, 90);

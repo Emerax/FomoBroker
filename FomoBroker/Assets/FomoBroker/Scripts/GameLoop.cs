@@ -56,6 +56,10 @@ public class GameLoop : NetworkBehaviour {
         EnterState(GameState.START);
     }
 
+    public override void Spawned() {
+        RemainingStateTime = -1;
+    }
+
     public override void FixedUpdateNetwork() {
         if(isHost) {
             if(stateRunners.TryGetValue(GameState, out IGameStateRunner runner)) {
@@ -64,9 +68,14 @@ public class GameLoop : NetworkBehaviour {
                     GameState = nextState;
                 }
             }
+            else {
+                RemainingStateTime = -1;
+            }
         }
 
-        ui.UpdateTimer(RemainingStateTime);
+        if(GameState is GameState.ACTION) {
+            ui.UpdateTimer(RemainingStateTime);
+        }
     }
 
     private void TestStockRandomizing() {
@@ -216,6 +225,7 @@ public class GameLoop : NetworkBehaviour {
                 }
                 break;
             case GameState.ACTION:
+                ui.UpdateTimer(-1);
                 break;
             case GameState.MIGRATION:
                 break;
