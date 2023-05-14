@@ -365,6 +365,14 @@ public class GameLoop : NetworkBehaviour {
                         SetMoneyRPC(inv.money, playerId);
                         SetStocksRPC(packStockCountArray(inv.stocks), playerId);
                     }
+
+                    // Shuffle the sale order
+                    for(int ii = 0; ii < stocksForSale.Count; ++ii) {
+                        int index = Random.Range(0, stocksForSale.Count);
+                        StockForSale temp = stocksForSale[ii];
+                        stocksForSale[ii] = stocksForSale[index];
+                        stocksForSale[index] = temp;
+                    }
                 }
                 for(int si = 0; si < stocksVisuals.stockButtons.Count; ++si) {
                     stocksVisuals.stockButtons[si].SetForSale(false);
