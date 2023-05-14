@@ -343,10 +343,12 @@ public class GameLoop : NetworkBehaviour {
     }
 
     private void HandleAction(ActionType action, int target) {
+        Debug.Log($"Handle action {action} for target {target}");
         if(GameState is not GameState.ACTION) {
             return;
         }
         if(TryPayForAction(action)) {
+            Debug.Log($"Was able to pay!");
             PerformActionRPC(action, target);
         }
     }
@@ -381,7 +383,7 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
-    [Rpc]
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     void SetMoneyRPC(int moneyChange, int playerID) {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             inventory.money = moneyChange;
