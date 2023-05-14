@@ -29,10 +29,14 @@ public struct SettingsStruct {
     public int trashCost;
     public float trashEffect;
     public int rentPerStock;
+<<<<<<< HEAD
     public int stocksPerReligion;
     public float bidTime;
     public float startBidTime;
     public int bidStep;
+=======
+    public List<Color> playerColors;
+>>>>>>> 1874b6e (added player colors list)
 }
 
 public class GameLoop : NetworkBehaviour {
