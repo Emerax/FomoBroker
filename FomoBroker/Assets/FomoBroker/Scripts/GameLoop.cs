@@ -526,17 +526,15 @@ public class GameLoop : NetworkBehaviour {
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     private void PerformActionRPC(ActionType action, int target) {
-        if(isHost) {
-            switch(action) {
-                case ActionType.TRASH:
-                    attractionManager.ChangeAttraction(-settings.trashEffect, target);
-                    break;
-                case ActionType.HYPE:
-                    attractionManager.ChangeAttraction(settings.hypeEffect, target);
-                    break;
-                default:
-                    break;
-            }
+        switch(action) {
+            case ActionType.TRASH:
+                attractionManager.ChangeAttraction(-settings.trashEffect, target);
+                break;
+            case ActionType.HYPE:
+                attractionManager.ChangeAttraction(settings.hypeEffect, target);
+                break;
+            default:
+                break;
         }
     }
 
