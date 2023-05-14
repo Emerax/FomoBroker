@@ -202,6 +202,7 @@ public class GameLoop : NetworkBehaviour {
                 if(isHost) {
                     int[] runnerCountForBase = RandomizeRunnerCountForBases();
                     int[][] stockCountForPlayer = RandomizePlayerStocks();
+                    InitGameRPC(runnerCountForBase);
 
                     foreach((int playerId, int i) in fusion.playerIds.Select((p, i) => (p, i))) {
                         inventories[playerId] = new() {
@@ -212,7 +213,6 @@ public class GameLoop : NetworkBehaviour {
                         SetStocksRPC(packStockCountArray(stockCountForPlayer[i]), playerId);
                     }
 
-                    InitGameRPC(runnerCountForBase);
                 }
                 break;
             case GameState.ACTION:
