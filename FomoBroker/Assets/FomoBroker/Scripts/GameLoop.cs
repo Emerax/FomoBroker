@@ -65,6 +65,7 @@ public class GameLoop : NetworkBehaviour {
     private ActionManager actionManager;
 
     readonly Dictionary<int, PlayerInventory> inventories = new();
+    readonly Dictionary<int, Color> playerColors = new();
     readonly List<StockForSale> stocksForSale = new();
     StockForSale currentStockForSale;
 
@@ -326,10 +327,11 @@ public class GameLoop : NetworkBehaviour {
                     foreach((int playerId, int i) in fusion.PlayerIds.Select((p, i) => (p, i))) {
                         inventories[playerId] = new() {
                             money = settings.startingMoney,
-                            stocks = stockCountForPlayer[i]
+                            stocks = stockCountForPlayer[i],
                         };
 
                         SetStocksRPC(packStockCountArray(stockCountForPlayer[i]), playerId);
+                        playerColors[playerId]=settings.playerColors[i];
                     }
 
                 }
@@ -380,7 +382,6 @@ public class GameLoop : NetworkBehaviour {
                 break;
             case GameState.TRADING_BID:
                 ui.CloseStockBidding();
-                CheckWinner();
                 break;
             case GameState.GAME_OVER:
                 break;
@@ -388,12 +389,6 @@ public class GameLoop : NetworkBehaviour {
 
         if(isHost && stateRunners.TryGetValue(previousState, out IGameStateRunner runner)) {
             runner.Reset();
-        }
-    }
-
-    private void CheckWinner() {
-        if(isHost) {
-
         }
     }
 
@@ -456,7 +451,8 @@ public class GameLoop : NetworkBehaviour {
                 ui.OpenStockBidding();
                 break;
             case GameState.GAME_OVER:
-                ui.ShowGameOver();
+                int winnerID= inventories.Keys.FirstOrDefault(p => inventories[p].stocks.Any(s => s >= settings.stocksPerReligion));
+                ui.ShowGameOver(playerColors[winnerID]);
                 break;
         }
 

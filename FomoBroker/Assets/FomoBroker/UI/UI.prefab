@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2820220915024077760
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1902,6 +1902,7 @@ MonoBehaviour:
   clock: {fileID: 0}
   moneyText: {fileID: 994626356740533488}
   gameOverRoot: {fileID: 7022557848855877477}
+  winnerText: {fileID: 8173894839148967468}
   phaseText: {fileID: 3910846186256476960}
   bidPanel: {fileID: 3528690817512454611}
   bidPriceText: {fileID: 819212316704250370}
@@ -2107,7 +2108,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6341649487434119967
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2181,7 +2182,7 @@ GameObject:
   - component: {fileID: 1987079420040125944}
   - component: {fileID: 8173894839148967468}
   m_Layer: 5
-  m_Name: nameWinner
+  m_Name: Winner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2235,7 +2236,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 0
+  m_text: this guy!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3043,6 +3044,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BidPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413550907617633175, guid: 0ab431f52b7e71d4ca294134bfa91a48,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4725484043409231200, guid: 0ab431f52b7e71d4ca294134bfa91a48,
         type: 3}

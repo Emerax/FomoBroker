@@ -26,6 +26,8 @@ public class UI : MonoBehaviour {
     [SerializeField]
     private GameObject gameOverRoot;
     [SerializeField]
+    private TextMeshProUGUI winnerText;
+    [SerializeField]
     private TextMeshProUGUI phaseText;
 
     public Transform bidPanel;
@@ -65,10 +67,11 @@ public class UI : MonoBehaviour {
         
     }
 
-    public void ShowGameOver() {
+    public void ShowGameOver(Color winnerColor) {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(false);
         GameOverRoot.SetActive(true);
+        winnerText.color=winnerColor;
     }
 
     public void HideUI() {
