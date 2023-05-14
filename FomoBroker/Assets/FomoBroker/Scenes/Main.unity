@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571337, b: 0.3069219, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -347,16 +347,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  settings:
+    actionStateTime: 10
+    dividendStateTime: 10
+    startingMoney: 100
+    maxStocks: 3
+    hypeEffect: 15
+    trashEffect: 10
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
-  actionStateTime: 10
-  dividendStateTime: 2
   runManager: {fileID: 1631081915}
   temples:
   - {fileID: 1899481038}
   - {fileID: 1335193550}
   - {fileID: 981416634}
-  stocksVisuals: {fileID: 0}
+  stocksVisuals: {fileID: 446468077}
   buildings: []
 --- !u!4 &280879181
 Transform:
@@ -692,6 +697,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad1727739706549d29cc709f623fe75b, type: 3}
+--- !u!114 &446468077 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
+    type: 3}
+  m_PrefabInstance: {fileID: 446468076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14612d0a3adc948209a8310bf58200a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &587752973
 PrefabInstance:
   m_ObjectHideFlags: 0

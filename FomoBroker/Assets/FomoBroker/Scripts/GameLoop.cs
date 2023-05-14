@@ -8,15 +8,25 @@ public class PlayerInventory {
     public int[] stocks = new int[3];
 }
 
+[System.Serializable]
+public struct SettingsStruct {
+    public float actionStateTime;
+    public float dividendStateTime;
+    public int startingMoney;
+    public int maxStocks;
+    public int hypeCost;
+    public float hypeEffect;
+    public int trashCost;
+    public float trashEffect;
+}
+
 public class GameLoop : NetworkBehaviour {
+    [SerializeField]
+    private SettingsStruct settings;
     [SerializeField]
     private FusionAPI fusion;
     [SerializeField]
     private UI ui;
-    [SerializeField]
-    private float actionStateTime = 60;
-    [SerializeField]
-    private float dividendStateTime = 3;
     [SerializeField]
     private RunManager runManager;
     [SerializeField]
@@ -25,7 +35,6 @@ public class GameLoop : NetworkBehaviour {
     private Stock stocksVisuals;
     [SerializeField]
     private List<actionableBuilding> buildings;
-
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
@@ -43,13 +52,13 @@ public class GameLoop : NetworkBehaviour {
 
     private void Awake() {
         //Setup runners
-        stateRunners[GameState.ACTION] = new ActionStateRunner(actionStateTime);
+        stateRunners[GameState.ACTION] = new ActionStateRunner(settings.actionStateTime);
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
-        stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
+        stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(settings.dividendStateTime);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
-        
+        actionManager.ActionEvent += HandleAction;
 
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
@@ -219,7 +228,7 @@ public class GameLoop : NetworkBehaviour {
                     int[][] stockCountForPlayer = RandomizePlayerStocks();
                     InitGameRPC(runnerCountForBase);
 
-                    foreach((int playerId, int i) in fusion.playerIds.Select((p, i) => (p, i))) {
+                    foreach((int playerId, int i) in fusion.PlayerIds.Select((p, i) => (p, i))) {
                         inventories[playerId] = new() {
                             money = 100,
                             stocks = stockCountForPlayer[i]
@@ -293,6 +302,28 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
+    private void HandleAction(ActionType action, int target) {
+        if(TryPayForAction(action)) {
+            PerformActionRPC(action, target);
+        }
+    }
+
+    private bool TryPayForAction(ActionType action) {
+        int myMoney = inventories[fusion.PlayerID].money;
+        int actionCost = action switch {
+            ActionType.TRASH => settings.trashCost,
+            ActionType.HYPE => settings.hypeCost,
+            _ => throw new System.NotImplementedException(),
+        };
+
+        if(myMoney >= actionCost) {
+            ChangeMoneyRPC(-actionCost, fusion.PlayerID);
+            return true;
+        }
+
+        return false;
+    }
+
     [Rpc]
     void RunRunnersRPC(int[] shift0, int[] shift1, int[] shift2) {
         runManager.Run(new int[3][] { shift0, shift1, shift2 });
@@ -323,6 +354,22 @@ public class GameLoop : NetworkBehaviour {
             int[] stocks = unpackStockCountArray(packedStocks);
             inventory.stocks = stocks;
             stocksVisuals.UpdateVisuals(stocks);
+        }
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    private void PerformActionRPC(ActionType action, int target) {
+        if(isHost) {
+            switch(action) {
+                case ActionType.TRASH:
+                    attractionManager.ChangeAttraction(settings.trashEffect, target);
+                    break;
+                case ActionType.HYPE:
+                    attractionManager.ChangeAttraction(settings.hypeEffect, target);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
