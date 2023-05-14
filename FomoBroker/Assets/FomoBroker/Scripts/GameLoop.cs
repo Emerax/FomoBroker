@@ -451,8 +451,10 @@ public class GameLoop : NetworkBehaviour {
                 ui.OpenStockBidding();
                 break;
             case GameState.GAME_OVER:
-                int winnerID= inventories.Keys.FirstOrDefault(p => inventories[p].stocks.Any(s => s >= settings.stocksPerReligion));
-                ui.ShowGameOver(playerColors[winnerID]);
+                if(isHost) {
+                    int winnerID= inventories.Keys.FirstOrDefault(p => inventories[p].stocks.Any(s => s >= settings.stocksPerReligion));
+                    SetWinnerIdRPC(winnerID);
+                }
                 break;
         }
 
@@ -470,6 +472,10 @@ public class GameLoop : NetworkBehaviour {
         };
 
         ui.UpdatePhaseText(phaseText);
+    }
+
+    [Rpc] void SetWinnerIdRPC(int winnerID) {
+        ui.ShowGameOver(playerColors[winnerID]);
     }
 
     [Rpc]
