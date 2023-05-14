@@ -248,7 +248,7 @@ public class GameLoop : NetworkBehaviour {
                     }
 
                 }
-                ui.ShowGameOver();
+                //ui.ShowGameOver();
                 break;
             case GameState.ACTION:
                 ui.UpdateTimer(-1);
