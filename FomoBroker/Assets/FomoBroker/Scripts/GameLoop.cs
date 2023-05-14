@@ -22,7 +22,11 @@ public class GameLoop : NetworkBehaviour {
     [SerializeField]
     private List<Temple> temples;
     [SerializeField]
+<<<<<<< HEAD
     private Stock stocksVisuals;
+=======
+    private List<actionableBuilding> buildings;
+>>>>>>> 8a28796 (setup actionManager)
 
     [Networked(OnChanged = nameof(ChangeState))]
     private GameState GameState { get; set; } = GameState.START;
@@ -32,6 +36,7 @@ public class GameLoop : NetworkBehaviour {
     private bool isHost = false;
     private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
     private AttractionManager attractionManager;
+    private ActionManager actionManager;
 
     readonly Dictionary<int, PlayerInventory> inventories = new();
 
@@ -44,6 +49,8 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(dividendStateTime);
 
         attractionManager = new(temples);
+        actionManager = new(buildings);
+        
 
         //UI Callbacks
         ui.JoinOrHostButton.onClick.AddListener(JoinOrHostGame);
