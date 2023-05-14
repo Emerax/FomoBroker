@@ -537,7 +537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  typeBuilding: 1
+  action: 0
   religionBuilding: 0
 --- !u!1 &1239769215
 GameObject:
