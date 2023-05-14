@@ -368,11 +368,7 @@ MonoBehaviour:
   - {fileID: 1899481038}
   - {fileID: 1335193550}
   - {fileID: 981416634}
-<<<<<<< HEAD
   stocksVisuals: {fileID: 1828233617}
-  buildings: []
-=======
-  stocksVisuals: {fileID: 0}
   buildings:
   - {fileID: 948772734}
   - {fileID: 87332373}
@@ -380,7 +376,6 @@ MonoBehaviour:
   - {fileID: 1899481041}
   - {fileID: 1684846712}
   - {fileID: 1537084236}
->>>>>>> 5c22b92 (tagging buildings)
 --- !u!4 &280879181
 Transform:
   m_ObjectHideFlags: 0
