@@ -71,6 +71,7 @@ public class GameLoop : NetworkBehaviour {
     [Networked]
     float CurrentBiddingTimer { get; set; }
 
+    public GameObject moneyTextPrefab;
 
     private void Awake() {
         //Setup runners
@@ -459,24 +460,33 @@ public class GameLoop : NetworkBehaviour {
         ui.UpdatePhaseText(phaseText);
     }
 
+    private void spawnMoneyText(Vector3 position, int money) {
+        GameObject to = GameObject.Instantiate(moneyTextPrefab);
+        to.transform.position = position;
+        FloatingText ft = to.GetComponent<FloatingText>();
+        ft.SetMoney(money);
+    }
+
     private void HandleAction(ActionType action, int target) {
         Debug.Log($"Handle action {action} for target {target}. State is {GameState}");
         if(GameState is not GameState.ACTION) {
             return;
         }
-        if(TryPayForAction(action)) {
-            Debug.Log($"Was able to pay!");
-            PerformActionRPC(action, target);
-        }
-    }
 
-    private bool TryPayForAction(ActionType action) {
-        int myMoney = inventories[fusion.PlayerID].money;
         int actionCost = action switch {
             ActionType.TRASH => settings.trashCost,
             ActionType.HYPE => settings.hypeCost,
             _ => throw new System.NotImplementedException(),
         };
+        if(TryPayForAction(action, actionCost)) {
+            spawnMoneyText(temples[target].transform.position + new Vector3(0, 20, 0), actionCost);
+            Debug.Log($"Was able to pay!");
+            PerformActionRPC(action, target);
+        }
+    }
+
+    private bool TryPayForAction(ActionType action, int actionCost) {
+        int myMoney = inventories[fusion.PlayerID].money;
         int balance = myMoney - actionCost;
         Debug.Log($"My money: {myMoney}, cost: {actionCost}. Balance: {balance}");
         if(balance >= 0) {

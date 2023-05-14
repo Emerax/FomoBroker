@@ -375,6 +375,7 @@ MonoBehaviour:
     bidTime: 3
     startBidTime: 5
     bidStep: 10
+    playerColors: []
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   runManager: {fileID: 1631081915}
@@ -390,6 +391,8 @@ MonoBehaviour:
   - {fileID: 1899481041}
   - {fileID: 1684846712}
   - {fileID: 1537084236}
+  moneyTextPrefab: {fileID: 8142918360381128096, guid: e139c7c2c358c0f4cacdbfd3fc565234,
+    type: 3}
 --- !u!4 &280879181
 Transform:
   m_ObjectHideFlags: 0
@@ -2965,6 +2968,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6341649487228579543, guid: 641f12246af474193a21246b9c9a3b36,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7382658337500277157, guid: 641f12246af474193a21246b9c9a3b36,
         type: 3}
