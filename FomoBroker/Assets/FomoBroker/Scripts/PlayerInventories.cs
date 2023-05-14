@@ -23,9 +23,17 @@ public class PlayerInventories : NetworkBehaviour {
 
     public override void FixedUpdateNetwork() {
         if(Input.anyKeyDown) {
-            MyMoney -= 5;
+            ChangeMoney(-5);
         }
     }
 
+    public void ChangeMoney(int amount) {
+        ChangeMoneyRPC(amount, fusion.PlayerID);
+    }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    private void ChangeMoneyRPC(int valueChange, int playerId) {
+        PlayerMoney[playerId] += valueChange;
+        Debug.Log($"Player {playerId} now has {PlayerMoney[playerId]} money");
+    }
 }
