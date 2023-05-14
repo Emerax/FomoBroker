@@ -10,6 +10,8 @@ public class Stock : MonoBehaviour {
     [SerializeField]
     private List<GameObject> religion3Shares = new();
 
+    public List<StockButton> stockButtons;
+
     public void UpdateVisuals(int[] stocks) {
         religion1 = stocks[0];
         religion2 = stocks[1];

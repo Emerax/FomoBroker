@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerInventory {
     public int money;
     public int[] stocks = new int[3];
+    public bool[] stockMarkedForSale = new bool[3];
 }
 
 [System.Serializable]
@@ -13,6 +14,7 @@ public struct SettingsStruct {
     public float actionStateTime;
     public float dividendStateTime;
     public float rentStateTime;
+    public float tradingSelectStateTime;
     public int startingMoney;
     public int maxStocks;
     public int hypeCost;
@@ -58,6 +60,7 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.MIGRATION] = new MigrationStateRunner(runManager);
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(settings.dividendStateTime);
         stateRunners[GameState.RENT] = new RentStateRunner(settings.dividendStateTime);
+        stateRunners[GameState.TRADING_SELECT] = new TradingSelectStateRunner(settings.tradingSelectStateTime);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
@@ -70,6 +73,10 @@ public class GameLoop : NetworkBehaviour {
         //Network callbacks
         fusion.JoinGameEvent += OnJoinGame;
         fusion.PlayerCountChangedEvent += OnPlayerCountChanged;
+
+        for(int ii = 0; ii < 3; ++ii) {
+            stocksVisuals.stockButtons[ii].onClicked += MarkMyStockForSale;
+        }
 
         EnterState(GameState.START);
     }
@@ -91,7 +98,7 @@ public class GameLoop : NetworkBehaviour {
             }
         }
 
-        if(GameState is GameState.ACTION) {
+        if(GameState is (GameState.ACTION or GameState.TRADING_SELECT)) {
             ui.UpdateTimer(RemainingStateTime);
         }
     }
@@ -252,6 +259,24 @@ public class GameLoop : NetworkBehaviour {
             case GameState.RENT:
                 break;
             case GameState.TRADING_SELECT:
+                ui.UpdateTimer(-1);
+                if(isHost) {
+                    foreach(int playerId in inventories.Keys) {
+                        PlayerInventory inv = inventories[playerId];
+                        for(int ii = 0; ii < 3; ++ii) {
+                            if(inv.stockMarkedForSale[ii] && inv.stocks[ii] > 0) {
+                                inv.stocks[ii] -= 1;
+                                inv.money += 100;
+                            }
+                            inv.stockMarkedForSale[ii] = false;
+                        }
+                        ChangeMoneyRPC(inv.money, playerId);
+                        SetStocksRPC(packStockCountArray(inv.stocks), playerId);
+                    }
+                }
+                for(int si = 0; si < stocksVisuals.stockButtons.Count; ++si) {
+                    stocksVisuals.stockButtons[si].SetForSale(false);
+                }
                 break;
             case GameState.TRADING_BID:
                 break;
@@ -384,6 +409,22 @@ public class GameLoop : NetworkBehaviour {
                 default:
                     break;
             }
+        }
+    }
+
+    private void MarkStockForSaleRPC(int index, bool forSale, int playerID) {
+        if(!isHost) return;
+
+        if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
+            inventory.stockMarkedForSale[index] = forSale;
+            Debug.Log("Mark stock " + index + " for sale " + forSale);
+        }   
+    }
+
+    public void MarkMyStockForSale(int index, bool forSale) {
+        if(GameState == GameState.TRADING_SELECT) {
+            MarkStockForSaleRPC(index, forSale, fusion.PlayerID);
+            stocksVisuals.stockButtons[index].SetForSale(forSale);
         }
     }
 }
