@@ -38,6 +38,7 @@ public class Clock : MonoBehaviour
             if(!hasCompleted) {
                 buzzing = true;
                 buzzTimer = 2.0f;
+                hasCompleted = true;
             }
         }
         else {

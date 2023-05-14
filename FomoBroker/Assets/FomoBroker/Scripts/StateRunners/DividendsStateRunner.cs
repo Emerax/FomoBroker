@@ -19,6 +19,6 @@ public class DividendsStateRunner : IGameStateRunner {
 
     public float Run(float elapsed) {
         remainingTime -= elapsed;
-        return remainingTime;
+        return -1;
     }
 }

@@ -20,6 +20,8 @@ public class UI : MonoBehaviour {
     private TextMeshProUGUI timerText;
     [SerializeField]
     private Clock clock;
+    [SerializeField]
+    private TextMeshProUGUI moneyText;
 
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
@@ -43,6 +45,10 @@ public class UI : MonoBehaviour {
     public void HideUI() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(false);
+    }
+
+    public void UpdateMoney(int money) {
+        moneyText.text = $"${money}";
     }
 
     public void UpdateTimer(float time) {

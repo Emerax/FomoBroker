@@ -135,7 +135,7 @@ public class GameLoop : NetworkBehaviour {
 
         int[] remainingStocks = new int[3];
         int stockCountPerBase = playerCount * 2;
-        int maxStocksForPlayerPerType = stockCountPerBase - 2;
+        int maxStocksForPlayerPerType = stockCountPerBase - 1;
 
         int remainingTotalStocks = stockCountPerBase * 3;
         for(int ii = 0; ii < 3; ++ii) {
@@ -261,9 +261,8 @@ public class GameLoop : NetworkBehaviour {
                             inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
                             Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
                         }
-                        Debug.Log("Player" + playerId + " has " + inv.money + " money");
-                    }
-                    for(int pi = 0; pi < playerCount; ++pi) {
+                        ChangeMoneyRPC(inv.money, playerId);
+                        Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
                     }
                 }
                 break;
@@ -293,7 +292,13 @@ public class GameLoop : NetworkBehaviour {
 
     [Rpc]
     void ChangeMoneyRPC(int moneyChange, int playerID) {
-        inventories[playerID].money = moneyChange;
+        if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
+            inventory.money = moneyChange;
+            Debug.Log("Player" + playerID + " has " + inventory.money + " money");
+        }
+        if(playerID == fusion.PlayerID) {
+            ui.UpdateMoney(moneyChange);
+        }
     }
 
     [Rpc]
