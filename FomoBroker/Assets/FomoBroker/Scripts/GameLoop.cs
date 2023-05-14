@@ -401,7 +401,9 @@ public class GameLoop : NetworkBehaviour {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             int[] stocks = unpackStockCountArray(packedStocks);
             inventory.stocks = stocks;
-            stocksVisuals.UpdateVisuals(stocks);
+            if(playerID == fusion.PlayerID) {
+                stocksVisuals.UpdateVisuals(stocks);
+            }
         }
     }
 
