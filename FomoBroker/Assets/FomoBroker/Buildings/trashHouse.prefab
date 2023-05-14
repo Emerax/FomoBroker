@@ -247,6 +247,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1351779c6dda14f0f89af2ce824361b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  action: 0
+  clickHint: {fileID: 1317068762246929566}
+  religionBuilding: 1
 --- !u!136 &3373357325310629326
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -362,10 +362,14 @@ MonoBehaviour:
   settings:
     actionStateTime: 10
     dividendStateTime: 10
+    rentStateTime: 5
     startingMoney: 100
     maxStocks: 3
+    hypeCost: 10
     hypeEffect: 15
+    trashCost: 10
     trashEffect: 10
+    rentPerStock: 15
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   runManager: {fileID: 1631081915}
@@ -373,7 +377,7 @@ MonoBehaviour:
   - {fileID: 1899481038}
   - {fileID: 1335193550}
   - {fileID: 981416634}
-  stocksVisuals: {fileID: 1828233617}
+  stocksVisuals: {fileID: 446468077}
   buildings:
   - {fileID: 948772734}
   - {fileID: 87332373}
@@ -737,7 +741,7 @@ PrefabInstance:
     - target: {fileID: 3800322082638610423, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
       propertyPath: religionBuilding
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4843706523488813469, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
@@ -1686,7 +1690,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   action: 1
-  religionBuilding: 3
+  religionBuilding: 2
+  clickHint: {fileID: 0}
 --- !u!1001 &1622311673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1694,10 +1699,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1317068762246929566, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3800322082638610423, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
       propertyPath: religionBuilding
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4843706523488813469, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
@@ -2155,7 +2165,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   action: 1
-  religionBuilding: 2
+  religionBuilding: 1
+  clickHint: {fileID: 0}
 --- !u!1001 &1773999521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2225,18 +2236,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a7c008385a651640ae2c1b8748981cf, type: 3}
---- !u!114 &1828233617 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3131399702003958947, guid: ad1727739706549d29cc709f623fe75b,
-    type: 3}
-  m_PrefabInstance: {fileID: 446468076}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14612d0a3adc948209a8310bf58200a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1831974817
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,7 +2366,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   action: 1
-  religionBuilding: 1
+  religionBuilding: 0
+  clickHint: {fileID: 0}
 --- !u!1 &1928982146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2467,7 +2467,7 @@ PrefabInstance:
     - target: {fileID: 3800322082638610423, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}
       propertyPath: religionBuilding
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4843706523488813469, guid: f23dbfe24af4346d59768c5b8ee9c2eb,
         type: 3}

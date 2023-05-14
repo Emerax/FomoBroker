@@ -289,7 +289,7 @@ public class GameLoop : NetworkBehaviour {
                             inv.money += inv.stocks[ii] * runManager.runnerCountAtBase[ii];
                             Debug.Log($"Stocks: {inv.stocks[ii]}, runners: {runManager.runnerCountAtBase[ii]}");
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
                     }
                 }
@@ -299,11 +299,11 @@ public class GameLoop : NetworkBehaviour {
                     foreach(int playerId in inventories.Keys) {
                         PlayerInventory inv = inventories[playerId];
                         for(int ii = 0; ii < 3; ++ii) {
-                            inv.money -= inv.stocks[ii] * rentPerStock;
+                            inv.money -= inv.stocks[ii] * settings.rentPerStock;
                         }
-                        ChangeMoneyRPC(inv.money, playerId);
+                        SetMoneyRPC(inv.money, playerId);
                         Debug.Log("Send Player" + playerId + " has " + inv.money + " money");
-                    }   
+                    }
                 }
                 break;
             case GameState.TRADING_SELECT:
@@ -329,8 +329,9 @@ public class GameLoop : NetworkBehaviour {
             _ => throw new System.NotImplementedException(),
         };
 
-        if(myMoney >= actionCost) {
-            ChangeMoneyRPC(-actionCost, fusion.PlayerID);
+        int balance = myMoney - actionCost;
+        if(balance >= 0) {
+            SetMoneyRPC(balance, fusion.PlayerID);
             return true;
         }
 
@@ -351,7 +352,7 @@ public class GameLoop : NetworkBehaviour {
     }
 
     [Rpc]
-    void ChangeMoneyRPC(int moneyChange, int playerID) {
+    void SetMoneyRPC(int moneyChange, int playerID) {
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
             inventory.money = moneyChange;
             Debug.Log("Player" + playerID + " has " + inventory.money + " money");
