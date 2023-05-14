@@ -12,6 +12,8 @@ public class UI : MonoBehaviour {
     [SerializeField]
     private GameObject lobbyRoot;
     [SerializeField]
+    private TextMeshProUGUI roomNameText;
+    [SerializeField]
     private TextMeshProUGUI playerCountText;
     [SerializeField]
     private Button startButton;
@@ -44,8 +46,11 @@ public class UI : MonoBehaviour {
 
     public void ShowLobby() {
         JoinOrHostRoot.SetActive(false);
+        
         LobbyRoot.SetActive(true);
+        roomNameText.text = "Room: "+roomNameInput.text;
         GameOverRoot.SetActive(false);
+        
     }
 
     public void ShowGameOver() {

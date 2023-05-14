@@ -1894,6 +1894,7 @@ MonoBehaviour:
   roomNameInput: {fileID: 6341649487320317963}
   joinOrHostButton: {fileID: 6341649486753493684}
   lobbyRoot: {fileID: 302939659717669807}
+  roomNameText: {fileID: 5553290063834574666}
   playerCountText: {fileID: 6301569707490393027}
   startButton: {fileID: 8383867916173184723}
   timerText: {fileID: 4410598052133461898}
