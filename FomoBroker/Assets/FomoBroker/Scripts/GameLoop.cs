@@ -523,6 +523,7 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     private void MarkStockForSaleRPC(int index, bool forSale, int playerID) {
         if(!isHost) return;
 
@@ -563,6 +564,7 @@ public class GameLoop : NetworkBehaviour {
         ui.SetBidPrice(0);
         ui.sellerNameText.text = sellerPlayerID.ToString();
         ui.highestBidderNameText.text = "None";
+        ui.bidStockIcon.texture = ui.stockIcons[stockIndex];
     }
 
     [Rpc]

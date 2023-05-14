@@ -1909,6 +1909,11 @@ MonoBehaviour:
   sellerNameText: {fileID: 9052269370790061293}
   highestBidderNameText: {fileID: 6321206530052493644}
   bidMoreButton: {fileID: 7382658337500277157}
+  bidStockIcon: {fileID: 5626918880056444453}
+  stockIcons:
+  - {fileID: 2800000, guid: 6b156cddacd4b444681fc0b0fe7c29fe, type: 3}
+  - {fileID: 2800000, guid: 65f3ffebc72850c41ab2676ca619b891, type: 3}
+  - {fileID: 2800000, guid: 0e27a7739e190034595dc7530d1af0a8, type: 3}
 --- !u!1 &6341649487320317961
 GameObject:
   m_ObjectHideFlags: 0
@@ -3079,6 +3084,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5626918880056444453 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7635544202727432928, guid: 0ab431f52b7e71d4ca294134bfa91a48,
+    type: 3}
+  m_PrefabInstance: {fileID: 2873351640921449669}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6321206530052493644 stripped

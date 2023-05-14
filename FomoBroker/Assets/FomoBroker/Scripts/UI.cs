@@ -34,6 +34,8 @@ public class UI : MonoBehaviour {
     public TextMeshProUGUI sellerNameText;
     public TextMeshProUGUI highestBidderNameText;
     public Button bidMoreButton;
+    public RawImage bidStockIcon;
+    public Texture2D[] stockIcons;
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
     public GameObject JoinOrHostRoot { get => joinOrHostRoot; }
