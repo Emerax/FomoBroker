@@ -512,7 +512,7 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     private void PerformActionRPC(ActionType action, int target) {
         if(isHost) {
             switch(action) {
