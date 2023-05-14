@@ -4,15 +4,10 @@ using UnityEngine;
 using TMPro;
 public class FloatingText : MonoBehaviour
 {
-    TextMeshPro tmp;
+    public TextMeshPro tmp;
     public Vector3 velocity;
     public float fadeOutDuration;
     public float lifeTime;
-    // Start is called before the first frame update
-    void Start()
-    {
-        tmp = GetComponent<TextMeshPro>();
-    }
 
     public void SetMoney(int money) {
         if(money < 0) {

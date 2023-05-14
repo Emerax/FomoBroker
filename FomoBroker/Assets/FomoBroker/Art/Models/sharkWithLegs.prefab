@@ -1133,7 +1133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2635513319299388737}
   - component: {fileID: 2529193519823528074}
-  - component: {fileID: 2529193519823528068}
   m_Layer: 0
   m_Name: legs
   m_TagString: Untagged
@@ -1178,19 +1177,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &2529193519823528068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 5639935816818999265, guid: 0497d6a51c5bd4a65a6ccaa1837ac15c,
-    type: 3}
-  m_PrefabInstance: {fileID: 7880335785947471717}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447762572421812219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd02c72b650fd6e428af988f645f1860, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4808760722500226965
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,5 +1634,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.227
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 0497d6a51c5bd4a65a6ccaa1837ac15c, type: 3}

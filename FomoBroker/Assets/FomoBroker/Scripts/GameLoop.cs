@@ -479,7 +479,7 @@ public class GameLoop : NetworkBehaviour {
             _ => throw new System.NotImplementedException(),
         };
         if(TryPayForAction(action, actionCost)) {
-            spawnMoneyText(temples[target].transform.position + new Vector3(0, 20, 0), actionCost);
+            spawnMoneyText(temples[target].MoneySpawnTransform.position, -actionCost);
             Debug.Log($"Was able to pay!");
             PerformActionRPC(action, target);
         }
@@ -534,19 +534,17 @@ public class GameLoop : NetworkBehaviour {
         }
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.StateAuthority)]
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     private void PerformActionRPC(ActionType action, int target) {
-        if(isHost) {
-            switch(action) {
-                case ActionType.TRASH:
-                    attractionManager.ChangeAttraction(-settings.trashEffect, target);
-                    break;
-                case ActionType.HYPE:
-                    attractionManager.ChangeAttraction(settings.hypeEffect, target);
-                    break;
-                default:
-                    break;
-            }
+        switch(action) {
+            case ActionType.TRASH:
+                attractionManager.ChangeAttraction(-settings.trashEffect, target);
+                break;
+            case ActionType.HYPE:
+                attractionManager.ChangeAttraction(settings.hypeEffect, target);
+                break;
+            default:
+                break;
         }
     }
 

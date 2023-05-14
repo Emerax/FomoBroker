@@ -250,7 +250,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 0
   religionBuilding: 1
-  clickHint: {fileID: 1317068762246929566}
 --- !u!136 &3373357325310629326
 CapsuleCollider:
   m_ObjectHideFlags: 0
