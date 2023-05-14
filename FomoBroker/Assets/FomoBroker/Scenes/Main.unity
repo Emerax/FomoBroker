@@ -371,6 +371,10 @@ MonoBehaviour:
     trashCost: 10
     trashEffect: 10
     rentPerStock: 20
+    stocksPerReligion: 4
+    bidTime: 3
+    startBidTime: 5
+    bidStep: 10
   fusion: {fileID: 1667726734}
   ui: {fileID: 898377428}
   runManager: {fileID: 1631081915}

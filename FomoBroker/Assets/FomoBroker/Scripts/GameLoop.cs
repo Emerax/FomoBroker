@@ -29,6 +29,10 @@ public struct SettingsStruct {
     public int trashCost;
     public float trashEffect;
     public int rentPerStock;
+    public int stocksPerReligion;
+    public float bidTime;
+    public float startBidTime;
+    public int bidStep;
 }
 
 public class GameLoop : NetworkBehaviour {
@@ -54,23 +58,18 @@ public class GameLoop : NetworkBehaviour {
     private float RemainingStateTime { get; set; }
 
     private bool isHost = false;
+    private int playerCount;
     private readonly Dictionary<GameState, IGameStateRunner> stateRunners = new();
     private AttractionManager attractionManager;
     private ActionManager actionManager;
 
     readonly Dictionary<int, PlayerInventory> inventories = new();
-
-    List<StockForSale> stocksForSale = new();
+    readonly List<StockForSale> stocksForSale = new();
     StockForSale currentStockForSale;
-    const float BidTime = 3.0f;
-    const float StartBidTime = 5.0f;
 
     [Networked]
-    float currentBiddingTimer {get; set; }
+    float CurrentBiddingTimer { get; set; }
 
-    int bidStep = 10;
-
-    private int playerCount;
 
     private void Awake() {
         //Setup runners
@@ -79,7 +78,7 @@ public class GameLoop : NetworkBehaviour {
         stateRunners[GameState.DIVIDENDS] = new DividendsStateRunner(settings.dividendStateTime);
         stateRunners[GameState.RENT] = new RentStateRunner(settings.dividendStateTime);
         stateRunners[GameState.TRADING_SELECT] = new TradingSelectStateRunner(settings.tradingSelectStateTime);
-        stateRunners[GameState.TRADING_BID] = new TradingBidStateRunner(stocksForSale);
+        stateRunners[GameState.TRADING_BID] = new TradingBidStateRunner(stocksForSale, settings.stocksPerReligion, inventories);
 
         attractionManager = new(temples);
         actionManager = new(buildings);
@@ -109,22 +108,22 @@ public class GameLoop : NetworkBehaviour {
         RemainingStateTime = -1;
     }
 
-    void goToNextStockForSale() {
+    void GoToNextStockForSale() {
         if(!isHost) return;
 
         if(currentStockForSale != null) {
-            stocksForSale.RemoveAt(stocksForSale.Count-1);
+            stocksForSale.RemoveAt(stocksForSale.Count - 1);
         }
 
         if(stocksForSale.Count > 0) {
-            currentStockForSale = stocksForSale[stocksForSale.Count-1];
+            currentStockForSale = stocksForSale[^1];
             SetCurrentStockForSaleRPC(currentStockForSale.playerID, currentStockForSale.stockIndex);
-            currentBiddingTimer = StartBidTime;
+            CurrentBiddingTimer = settings.startBidTime;
         }
         else {
             currentStockForSale = null;
         }
-    } 
+    }
 
     public override void FixedUpdateNetwork() {
         if(isHost) {
@@ -144,8 +143,8 @@ public class GameLoop : NetworkBehaviour {
         }
         if(GameState is GameState.TRADING_BID) {
             if(isHost) {
-                currentBiddingTimer -= fusion.NetworkDeltaTime;
-                if(currentBiddingTimer <= 0.0f) {
+                CurrentBiddingTimer -= fusion.NetworkDeltaTime;
+                if(CurrentBiddingTimer <= 0.0f) {
                     if(currentStockForSale != null) {
                         if(currentStockForSale.highestBidderPlayerID == -1) {
                             // Noone bought it, so return to seller
@@ -169,10 +168,10 @@ public class GameLoop : NetworkBehaviour {
                         }
 
                     }
-                    goToNextStockForSale();
+                    GoToNextStockForSale();
                 }
             }
-            ui.SetBidTimer(currentBiddingTimer);
+            ui.SetBidTimer(CurrentBiddingTimer);
         }
     }
 
@@ -242,12 +241,11 @@ public class GameLoop : NetworkBehaviour {
 
 
         int[] remainingStocks = new int[3];
-        int stockCountPerBase = playerCount * 2;
-        int maxStocksForPlayerPerType = stockCountPerBase - 1;
+        int maxStocksForPlayerPerType = settings.stocksPerReligion - 1;
 
-        int remainingTotalStocks = stockCountPerBase * 3;
+        int remainingTotalStocks = settings.stocksPerReligion * 3;
         for(int ii = 0; ii < 3; ++ii) {
-            remainingStocks[ii] = stockCountPerBase;
+            remainingStocks[ii] = settings.stocksPerReligion;
         }
 
         while(remainingTotalStocks > 0) {
@@ -361,6 +359,7 @@ public class GameLoop : NetworkBehaviour {
                 break;
             case GameState.TRADING_BID:
                 ui.CloseStockBidding();
+                CheckWinner();
                 break;
             case GameState.GAME_OVER:
                 break;
@@ -368,6 +367,12 @@ public class GameLoop : NetworkBehaviour {
 
         if(isHost && stateRunners.TryGetValue(previousState, out IGameStateRunner runner)) {
             runner.Reset();
+        }
+    }
+
+    private void CheckWinner() {
+        if(isHost) {
+
         }
     }
 
@@ -417,7 +422,7 @@ public class GameLoop : NetworkBehaviour {
                 break;
             case GameState.TRADING_BID:
                 if(isHost) {
-                    goToNextStockForSale();    
+                    GoToNextStockForSale();
                 }
                 ui.OpenStockBidding();
                 break;
@@ -548,14 +553,14 @@ public class GameLoop : NetworkBehaviour {
 
 
         if(inventories.TryGetValue(playerID, out PlayerInventory inventory)) {
-            if(inventory.money >= currentStockForSale.currentPrice+bidStep) {
-                currentStockForSale.currentPrice += bidStep;
+            if(inventory.money >= currentStockForSale.currentPrice + settings.bidStep) {
+                currentStockForSale.currentPrice += settings.bidStep;
                 currentStockForSale.highestBidderPlayerID = playerID;
-                currentBiddingTimer = Mathf.Max(BidTime, currentBiddingTimer);
+                CurrentBiddingTimer = Mathf.Max(settings.bidTime, CurrentBiddingTimer);
                 SetCurrentStockPriceRPC(currentStockForSale.currentPrice, playerID);
             }
-        }   
-    }    
+        }
+    }
 
     [Rpc]
     private void SetCurrentStockForSaleRPC(int sellerPlayerID, int stockIndex) {
