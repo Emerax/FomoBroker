@@ -22,6 +22,8 @@ public class UI : MonoBehaviour {
     private Clock clock;
     [SerializeField]
     private TextMeshProUGUI moneyText;
+    [SerializeField]
+    private GameObject gameOverRoot;
 
 
     public TMP_InputField RoomNameInput { get => roomNameInput; }
@@ -31,20 +33,30 @@ public class UI : MonoBehaviour {
     public Button StartButton { get => startButton; }
     public TextMeshProUGUI PlayerCountText { get => playerCountText; }
     public TextMeshProUGUI TimerText { get => timerText; }
+    public GameObject GameOverRoot { get => gameOverRoot; }
 
     public void ShowJoinOrHost() {
         JoinOrHostRoot.SetActive(true);
         LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(false);
     }
 
     public void ShowLobby() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(true);
+        GameOverRoot.SetActive(false);
+    }
+
+    public void ShowGameOver() {
+        JoinOrHostRoot.SetActive(false);
+        LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(true);
     }
 
     public void HideUI() {
         JoinOrHostRoot.SetActive(false);
         LobbyRoot.SetActive(false);
+        GameOverRoot.SetActive(false);
     }
 
     public void UpdateMoney(int money) {

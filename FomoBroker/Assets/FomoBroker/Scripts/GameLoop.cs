@@ -248,6 +248,7 @@ public class GameLoop : NetworkBehaviour {
                     }
 
                 }
+                //ui.ShowGameOver();
                 break;
             case GameState.ACTION:
                 ui.UpdateTimer(-1);
@@ -336,6 +337,7 @@ public class GameLoop : NetworkBehaviour {
             case GameState.TRADING_BID:
                 break;
             case GameState.GAME_OVER:
+                ui.ShowGameOver();
                 break;
         }
     }
